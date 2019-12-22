@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "font-awesome": "^4.7.0",
+    "jquery": "^3.4.1",
     "w3-css": "^4.1.0"
   },
   "devDependencies": {
     "@symfony/webpack-encore": "^0.28.2",
-    "jquery": "^3.4.1",
     "webpack-notifier": "^1.6.0"
   },
   "name": "snowtricks",
