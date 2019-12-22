@@ -1,8 +1,23 @@
 body {
-    font-family: "Lato", sans-serif
+    font-family: "Lato", sans-serif;
+    height: 100%;
 }
 a {text-decoration-line:none}
 a:hover{color:#6495ED}
 .w3-round-top{border-radius: 5px 5px 0 0;}
 .w3-normal{opacity: initial;}
 .w3-tag{cursor: pointer;}
+
+.myblue{color:#6495ED}
+#intro{
+  margin-top:-64px;}
+  
+#arrowup {
+  bottom: 80px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  border: none; /* Remove borders */
+  outline: none; /* Remove outline */
+  cursor: pointer; /* Add a mouse pointer on hover */
+  padding: 15px; /* Some padding */
+  font-size: 18px; /* Increase font size */
+}
