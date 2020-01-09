@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
-use App\Repository\CategoryRepository;
+use App\Entity\Comment;
+use App\Entity\Trick;
+use App\Form\CommentType;
 use App\Repository\TrickRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,14 +16,12 @@ class FrontController extends AbstractController
 {
     /**
      * @Route("/", name="front")
-     * @param CategoryRepository $categoryRepository
      * @param TrickRepository $trickRepository
      * @return Response
      */
-    public function index(CategoryRepository $categoryRepository, TrickRepository $trickRepository)
+    public function index(TrickRepository $trickRepository)
     {
         return $this->render('front/index.html.twig', [
-            'categories' => $categoryRepository->findAll(),
             'tricks' => $trickRepository->findAll()
         ]);
     }

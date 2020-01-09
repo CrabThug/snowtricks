@@ -7,17 +7,18 @@
 			{% block title %}{% endblock %}
 		</title>
 		{% block stylesheets %}
-			{{ encore_entry_link_tags("app") }}
 			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+			<link rel="stylesheet" href="{{ asset('assets/css/w3.css') }}">
+			<link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 		{% endblock %}
 	</head>
 	<body>
 		<!-- Navbar -->
 		<div class="w3-top">
-			<div class="w3-bar w3-black w3-card">
+			<div class="w3-bar w3-black w3-card" style="height: 4.5vh">
 				<div class="w3-container">
-				<a href="#home" class="w3-bar-item w3-button" style="width:100%;max-width:82px"><img class="w3-image" src="/images/logo.png" alt="Logo"></a>
+				<a href="/" class="w3-bar-item w3-button" style="width:100%;max-width:82px"><img class="w3-image" src="{{ asset('images/logo.png') }}" alt="Logo"></a>
 				<div class="w3-right">
 					<a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="#" onclick="navBar()" title="Toggle Navigation Menu">
 						<i class="fa fa-bars"></i>
@@ -35,10 +36,9 @@
 		</div>
 		{% block body %}{% endblock %}
 		<footer>
-		<p class="w3-center">&copy; 2019 - Réalisé par Damien Millet | <a href="#">Mentions légales</a></p>
+			<p class="w3-padding w3-margin-left">Copyright &copy; 2019</p>
 		</footer>
 		{% block javascripts %}
-			{{ encore_entry_script_tags("app") }}
 			<script src="{{ asset('assets/js/jquery.js') }}"></script>
 			<script src="{{ asset('assets/js/functions.js') }}"></script>
 		{% endblock %}

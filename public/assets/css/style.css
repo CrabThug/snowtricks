@@ -1,0 +1,59 @@
+body {
+    font-family: "Lato", sans-serif;
+    max-height: 100%;
+}
+
+hr {
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+a {
+    text-decoration-line: none
+}
+
+a:hover {
+    color: #6495ED
+}
+
+.w3-normal {
+    opacity: initial;
+}
+
+.w3-tag {
+    cursor: pointer;
+}
+
+.myblue {
+    color: #6495ED
+}
+
+#description {
+    margin: 32px 0 48px 0;
+}
+
+.w3-tag {
+    cursor: auto;
+}
+
+#arrow, #arrowup {
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    cursor: pointer; /* Add a mouse pointer on hover */
+}
+
+#arrowup {
+    bottom: 80px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    padding: 15px; /* Some padding */
+    font-size: 18px; /* Increase font size */
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.break-word {
+    word-wrap: break-word
+}
