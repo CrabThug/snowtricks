@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+    <div class="w3-content" style="max-width:1200px">
+        <div class="w3-display-container">
+            <img class="mySlides" src="{{ asset('images/tricks/ZYdken1.jpg') }}" style="width:100%;">
+            {% for image in trick.images|slice(1, trick.images|length) %}
+                <img class="mySlides" src="{{ asset('images/tricks/ZYdken1.jpg') }}" style="width:100%;display:none">
+            {% endfor %}
+            {% for movie in trick.movies %}
+                <img class="mySlides" src="{{ asset('images/tricks/ZYdken1.jpg') }}" style="width:100%;display:none">
+            {% endfor %}
+            <div class="w3-display-middle w3-text-blue">
+                {{ trick.title }}
+            </div>
+        </div>
+
+        <div class="w3-row w3-section">
+            <div
+                    class="w3-col s2">
+                {# TODO when actif toogle w3-opacity #}
+                <img class="w3-hover-opacity-off" src="{{ asset('images/tricks/ZYdken1.jpg') }}"
+                     style="width:100%;cursor:pointer" onclick="currentDiv(1)">
+            </div>
+            {% for image in trick.images|slice(1, trick.images|length) %}
+                <img class="w3-opacity w3-hover-opacity-off" src="{{ asset('images/tricks/ZYdken1.jpg') }}"
+                     style="width:100%;cursor:pointer" onclick="currentDiv(2)">
+            {% endfor %}
+            {% for movie in trick.movies %}
+                <img class="w3-opacity w3-hover-opacity-off" src="{{ asset('images/tricks/ZYdken1.jpg') }}"
+                     style="width:100%;cursor:pointer" onclick="currentDiv(3)">
+            {% endfor %}
+        </div>
+    </div>
+    <div class="w3-container">
+        <p id="description" class="w3-center">{{ trick.description }}</p>
+        <div class="w3-center">
+            <p>
+                <span class="w3-tag w3-blue w3-round">{{ trick.category.name }}</span>
+                <span class="w3-tag w3-blue w3-round">Créé le :
+					{{ trick.created|date("m/d/Y") }}</span>
+                {% if trick.updated %}
+                    <span class="w3-tag w3-blue w3-round">Modifié le :
+						{{ trick.updated }}</span>
+                {% endif %}
+            </p>
+        </div>
+
+        <hr>
+        {{ form_start(form, {'attr': {'class': 'w3-container w3-center'}}) }}
+        <div class="w3-row-padding" style="max-width:500px;margin:auto;">
+            <div class="w3-col s8">
+                {{ form_widget(form.content, {'attr': {'class': 'w3-input w3-border', 'style': 'min-height: 43px;height: 43px;max-width:306px;min-width:306px'}}) }}
+            </div>
+            <div class="w3-col s4">
+                <button class="w3-btn w3-blue w3-large">Laisser un commentaire</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+        <hr>
+
+    </div>
+    {% for comment in trick.comments|slice(0,5) %}
+        <div class="w3-margin">
+            <div class="w3-row-padding" style="max-width: 500px;margin: auto">
+                <div class="w3-col s2 w3-padding">{{ comment.user }}</div>
+                <div class="w3-col s10 w3-light-gray w3-padding break-word">{{ comment.content }}</div>
+            </div>
+        </div>
+    {% endfor %}
+    {% if trick.comments|length > 5 %}
+        <div class="w3-center">
+            <button class="w3-btn w3-blue">Afficher plus</button>
+        </div>
+    {% endif %}
+{% endblock %}

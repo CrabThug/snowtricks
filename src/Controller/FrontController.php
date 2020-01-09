@@ -25,4 +25,32 @@ class FrontController extends AbstractController
             'tricks' => $trickRepository->findAll()
         ]);
     }
+
+    /**
+     * @Route("/trick/details/{title}", name="details")
+     * @param TrickRepository $trickRepository
+     * @param Request $request
+     * @param Trick $trick
+     * @return Response
+     */
+    public function trick(Request $request, Trick $trick, EntityManagerInterface $entityManager)
+    {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setTrick($trick);
+            //$comment->setUser('1');
+
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            //return $this->redirectToRoute('task_success');
+        }
+
+        return $this->render('front/trick.html.twig', [
+            'trick' => $trick,
+            'form' => $form->createView(),
+        ]);
+    }
 }

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment
 {
@@ -46,9 +47,12 @@ class Comment
         return $this->creation;
     }
 
-    public function setCreation(\DateTimeInterface $creation): self
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreation()
     {
-        $this->creation = $creation;
+        $this->creation = new \DateTime();
 
         return $this;
     }
