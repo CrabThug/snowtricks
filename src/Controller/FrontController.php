@@ -21,14 +21,33 @@ class FrontController extends AbstractController
      */
     public function index(TrickRepository $trickRepository)
     {
+        $nTrick = $trickRepository->count([]);
+        $tricks = $trickRepository->findBy([], ['created' => 'desc'], 15, 0);
+
         return $this->render('front/index.html.twig', [
-            'tricks' => $trickRepository->findAll()
+            'tricks' => $tricks,
+            'nTricks' => $nTrick
+        ]);
+    }
+
+    /**
+     * @Route("/showMoreTrick", name="showMoreTrick")
+     * @param $start
+     * @param TrickRepository $trickRepository
+     * @return string
+     */
+    public function showMoreTrick(TrickRepository $trickRepository, Request $request)
+    {
+        $start = $request->request->get('start');
+        $tricks = $trickRepository->findBy([], ['created' => 'desc'], 15, $start);
+
+        return $this->render('front/moreTrick.html.twig', [
+            'tricks' => $tricks,
         ]);
     }
 
     /**
      * @Route("/trick/details/{title}", name="details")
-     * @param TrickRepository $trickRepository
      * @param Request $request
      * @param Trick $trick
      * @return Response
@@ -52,5 +71,10 @@ class FrontController extends AbstractController
             'trick' => $trick,
             'form' => $form->createView(),
         ]);
+    }
+
+    public function showMoreComment()
+    {
+
     }
 }
