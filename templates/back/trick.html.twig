@@ -1,0 +1,26 @@
+{% extends 'private.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <div class="w3-container w3-row-padding" style="width: 1200px; margin-bottom: 150px">
+        <div class="w3-content" style="max-width:1200px">
+            <div class="w3-display-container w3-grey" style="min-height: 600px">
+                <img class="mySlides" src="{{ asset('') }}" style="width:100%;">
+                <div class="w3-display-middle w3-text-blue">
+                </div>
+            </div>
+            <div class="w3-row w3-section">
+                <div class="w3-col s2 w3-grey w3-display-container"
+                     style="min-height:103.33px;"> {# TODO soit l'un soit l'autre #}
+                    <img class="w3-hover-opacity-off w3-image" src=""
+                         style="cursor:pointer" onclick="currentDiv(1)">
+                    <i class="fa fa-plus w3-text-white w3-xxxlarge w3-display-middle" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="" style="max-width: 600px; margin:auto">
+                {{ form(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -2,13 +2,18 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Category;
-use App\Entity\Trick;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DataFixtures\DependentFixtureInterface;
+use App\Entity\Trick;
 
-class TrickFixtures extends Fixture
+class TrickFixtures extends Fixture implements DependentFixtureInterface
 {
+    /**
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager)
     {
         $tricksName = [
@@ -28,16 +33,22 @@ class TrickFixtures extends Fixture
             ['Nose Slide', "Un nose slide consiste à glisser sur une barre de slide avec l'avant de la planche sur la barre."],
             ['Method Air', "Attraper sa planche d'une main et la tourner perpendiculairement au sol"]
         ];
-        for ($i = 0; $i < \count($tricksName); $i++) {
-            $category = new Category();
-            //$category = $category->findOneByName($tricksName[$i][2]);
+
+        for ($i = 0, $iMax = \count($tricksName); $i < $iMax; $i++) {
             $trick = new Trick();
             $trick->setTitle($tricksName[$i][0])
-                ->setDescription($tricksName[$i][1]);
-            //->setCategory($category);
+                ->setDescription($tricksName[$i][1])
+                ->setCategory($this->getReference('category-' . rand(0, 6)));
             $manager->persist($trick);
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return [
+            CategoryFixtures::class
+        ];
     }
 }

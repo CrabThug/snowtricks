@@ -208,9 +208,11 @@ class Trick
     /**
      * @ORM\PrePersist
      */
-    public function setCreated()
+    public function setCreated(): self
     {
         $this->created = new \DateTime();
+
+        return $this;
     }
 
     public function getUpdated(): ?\DateTimeInterface
