@@ -4,6 +4,7 @@
 
 {% block body %}
 
+    {{ dump(trick) }}
     <div class="w3-content" style="max-width:1200px">
         <div class="w3-display-container">
             <img class="mySlides" src="{{ asset('images/tricks/ZYdken1.jpg') }}" style="width:100%;">
@@ -63,17 +64,22 @@
         <hr>
 
     </div>
-    {% for comment in trick.comments|slice(0,5) %}
-        <div class="w3-margin">
-            <div class="w3-row-padding" style="max-width: 500px;margin: auto">
-                <div class="w3-col s2 w3-padding">{{ comment.user }}</div>
-                <div class="w3-col s10 w3-light-gray w3-padding break-word">{{ comment.content }}</div>
+    <div id="comments">
+        {% for c in comment %}
+            <div class="w3-margin" id="{{ c.id }}">
+                <div class="w3-row-padding" style="max-width: 500px;margin: auto">
+                    <div class="w3-col s2 w3-padding">{{ c.user }}</div>
+                    <div class="w3-col s10 w3-light-gray w3-padding break-word">{{ c.content }}</div>
+                </div>
             </div>
-        </div>
-    {% endfor %}
-    {% if trick.comments|length > 5 %}
-        <div class="w3-center">
-            <button class="w3-btn w3-blue"><i class="fa fa-spinner" aria-hidden="true"></i> Afficher plus</button>
-        </div>
-    {% endif %}
+        {% endfor %}
+    </div>
+    <div class="w3-bar w3-center" id="pagination">
+        {% for n in 0..nComment/10 %}
+            <a onclick="pagination()" id="{{ n + 1 }}" class="w3-button w3-hover-blue">{{ n + 1 }}</a>
+        {% endfor %}
+    </div>
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}
 {% endblock %}

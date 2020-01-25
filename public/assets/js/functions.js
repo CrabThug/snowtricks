@@ -37,39 +37,30 @@ function scrollToTrick() {
 
 function showMoreTrick() {
 
-    let trick = $('#tricks').find('.w3-third').length;
+    let tricks = $('#tricks').find('.w3-third').length;
     $('#arrowup').toggleClass('w3-hide');
     $.post("showMoreTrick",
         {
-            start: trick
+            start: tricks
         },
         function (data, status) {
             $("#tricks").append(data);
             let n = $('#showMore').attr('n');
-            let trick = $('#tricks').find('.w3-third').length;
-            if( n == trick ) {
+            let tricks = $('#tricks').find('.w3-third').length;
+            if (n <= tricks) {
                 $('#showMore').hide();
             }
         });
 }
 
-function showMoreComment() {
-
-    let comment = $('#comments').find('.w3-third').length;
-
-    $.post("showMoreComment",
+function pagination() {
+    let page = this.event.toElement.id;
+    let start = page * 10 - 9;
+    $.post(document.location.href + "/pagination",
         {
-            start: comment
+            start: start
         },
         function (data, status) {
-            $("#comments").append(data);
+            document.getElementById("comments").innerHTML = data;
         });
-}
-
-function buttonVisibility(trick) {
-    let n = $('#showMore').attr('n');
-    console.log(n);
-    if( n === trick ) {
-        $('#showMore').hide();
-    }
 }

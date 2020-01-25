@@ -17,12 +17,9 @@ class HomeController extends AbstractController
      */
     public function index(TrickRepository $trickRepository)
     {
-        $nTrick = $trickRepository->count([]);
-        $tricks = $trickRepository->findBy([], ['created' => 'desc'], 15, 0);
-
         return $this->render('home/index.html.twig', [
-            'tricks' => $tricks,
-            'nTricks' => $nTrick
+            'tricks' => $trickRepository->findBy([], ['created' => 'desc'], 15, 0),
+            'nTricks' => $trickRepository->count([])
         ]);
     }
 
@@ -30,15 +27,14 @@ class HomeController extends AbstractController
      * @Route("/showMoreTrick", name="showMoreTrick")
      * @param $start
      * @param TrickRepository $trickRepository
-     * @return string
+     * @return Response
      */
     public function showMoreTrick(TrickRepository $trickRepository, Request $request)
     {
         $start = $request->request->get('start');
-        $tricks = $trickRepository->findBy([], ['created' => 'desc'], 15, $start);
 
         return $this->render('home/moreTrick.html.twig', [
-            'tricks' => $tricks,
+            'tricks' => $trickRepository->findBy([], ['created' => 'desc'], 15, $start),
         ]);
     }
 }
