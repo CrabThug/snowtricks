@@ -3,8 +3,8 @@
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use App\Entity\Trick;
 
 class TrickFixtures extends Fixture implements DependentFixtureInterface
@@ -37,6 +37,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0, $iMax = \count($tricksName); $i < $iMax; $i++) {
             $trick = new Trick();
             $trick->setTitle($tricksName[$i][0])
+                ->setSlug(strtolower(str_replace(' ', '-', $tricksName[$i][0])))
                 ->setDescription($tricksName[$i][1])
                 ->setCategory($this->getReference('category-' . rand(0, 6)));
             $manager->persist($trick);
