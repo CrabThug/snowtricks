@@ -22,14 +22,35 @@ class Image
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $path;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="images")
      */
     private $trick;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $alt;
+
+    /**
+     * @var mixed
+     */
+    private $file;
+
+    /**
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param mixed $file
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+    }
 
     public function getId(): ?int
     {
@@ -47,19 +68,7 @@ class Image
 
         return $this;
     }
-
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): self
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
+    
     public function getTrick(): ?Trick
     {
         return $this->trick;
@@ -71,4 +80,18 @@ class Image
 
         return $this;
     }
+
+    public function getAlt(): ?string
+    {
+        return $this->alt;
+    }
+
+    public function setAlt(string $alt): self
+    {
+        $this->alt = $alt;
+
+        return $this;
+    }
+
+
 }
