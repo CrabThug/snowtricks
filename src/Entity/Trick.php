@@ -35,12 +35,12 @@ class Trick
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", cascade={"persist"}, mappedBy="trick")
      */
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Movie", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Movie",cascade={"persist"}, mappedBy="trick")
      */
     private $movies;
 
@@ -58,6 +58,11 @@ class Trick
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updated;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
 
     public function __construct()
     {
@@ -223,6 +228,18 @@ class Trick
     public function setUpdated(): self
     {
         $this->updated = new \DateTime();
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
