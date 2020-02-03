@@ -62,3 +62,13 @@ a:hover {
 .break-word {
     word-wrap: break-word
 }
+
+ul {
+    padding-inline-start: 0px;
+    list-style: none;
+}
+
+li * {
+    display: inline-block;
+    list-style: none;
+}
