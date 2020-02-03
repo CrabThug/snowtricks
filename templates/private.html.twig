@@ -19,15 +19,17 @@
 <div class="w3-top">
     <div class="w3-bar w3-black w3-card">
         <div class="w3-container" style="max-width: 1200px;margin:auto">
-            <a href="/" class="w3-bar-item w3-button" style="width:100%;max-width:82px"><img class="w3-image" src="{{ asset('images/logo.png') }}" alt="Logo"></a>
+            <a href="/" class="w3-bar-item w3-button" style="width:100%;max-width:82px">
+                <img class="w3-image"
+                     src="{{ asset('images/logo.png') }}"
+                     alt="Logo">
+            </a>
             <div class="w3-right">
                 <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="#"
                    onclick="navBar()" title="Toggle Navigation Menu">
                     <i class="fa fa-bars"></i>
                 </a>
-                <a href="{{ path('trick_new') }}" class="w3-bar-item w3-padding-large w3-hide-small">Add trick</a>
-                <a href="#" class="w3-bar-item w3-padding-large w3-hide-small">Sign in</a>
-                <a href="#" class="w3-bar-item w3-padding-large w3-hide-small">Sign up</a>
+                <a href="{{ relative_path('/') }}" class="w3-bar-item w3-padding-large w3-hide-small">Logout</a>
             </div>
         </div>
     </div>
@@ -35,13 +37,9 @@
 <div id="page">
     <!-- Navbar on small screens -->
     <div id="navMenu" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
-        <a href="#" class="w3-bar-item w3-button w3-padding-large" onclick="navBar()">Sign in</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-large" onclick="navBar()">Sign up</a>
+        <a href="{{ relative_path('/') }}" class="w3-bar-item w3-button w3-padding-large">Logout</a>
     </div>
     {% block body %}{% endblock %}
-    <footer>
-        <p class="w3-padding w3-margin-left">Copyright &copy; 2019</p>
-    </footer>
 </div>
 {% block javascripts %}
     <script src="{{ asset('assets/js/jquery.js') }}"></script>

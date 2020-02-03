@@ -1,0 +1,8 @@
+{{ form_start(form) }}
+{{ form_errors(form.images) }}
+{{ form_errors(form.movies) }}
+<ul class="image" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
+</ul>
+<ul class="movies" data-prototype="{{ form_widget(form.movies.vars.prototype)|e('html_attr') }}">
+</ul>
+{{ form_end(form) }}

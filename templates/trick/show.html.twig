@@ -3,8 +3,7 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-
-    {{ dump(trick) }}
+    <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">edit</a>
     <div class="w3-content" style="max-width:1200px">
         <div class="w3-display-container">
             <img class="mySlides" src="{{ asset('images/tricks/ZYdken1.jpg') }}" style="width:100%;">
@@ -26,8 +25,9 @@
                 <img class="w3-hover-opacity-off" src="{{ asset('images/tricks/ZYdken1.jpg') }}"
                      style="width:100%;cursor:pointer" onclick="currentDiv(1)">
             </div>
-            {% for image in trick.images|slice(1, trick.images|length) %}
-                <img class="w3-opacity w3-hover-opacity-off" src="{{ asset('images/tricks/ZYdken1.jpg') }}"
+            {% for image in trick.images|slice( 1, trick.images|length) %}
+                {{ dump(image) }}
+                <img class="w3-opacity w3-hover-opacity-off" src="{{ asset(image.path) }}"
                      style="width:100%;cursor:pointer" onclick="currentDiv(2)">
             {% endfor %}
             {% for movie in trick.movies %}
@@ -49,7 +49,6 @@
                 {% endif %}
             </p>
         </div>
-
         <hr>
         {{ form_start(form, {'attr': {'class': 'w3-container w3-center'}}) }}
         <div class="w3-row-padding" style="max-width:500px;margin:auto;">
@@ -62,7 +61,6 @@
         </div>
         {{ form_end(form) }}
         <hr>
-
     </div>
     <div id="comments">
         {% for c in comment %}
@@ -74,12 +72,17 @@
             </div>
         {% endfor %}
     </div>
-    <div class="w3-bar w3-center" id="pagination">
-        {% for n in 0..nComment/10 %}
-            <a onclick="pagination()" id="{{ n + 1 }}" class="w3-button w3-hover-blue">{{ n + 1 }}</a>
-        {% endfor %}
-    </div>
+    {% if nComment > 10 %}
+        <div class="w3-bar w3-center" id="pagination">
+            {% for n in 0..nComment/10 %}
+                <a onclick="pagination()" id="{{ n + 1 }}" class="w3-button w3-hover-blue">{{ n + 1 }}</a>
+            {% endfor %}
+        </div>
+    {% endif %}
     {% block javascripts %}
         {{ parent() }}
     {% endblock %}
 {% endblock %}
+
+
+

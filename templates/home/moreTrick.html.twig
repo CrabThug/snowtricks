@@ -3,9 +3,9 @@
         <div class="w3-card">
             <img class="w3-image" src="images/tricks/ZYdken1.jpg">
             <div class="w3-container w3-padding">
-                <a href="{{ relative_path('/trick/details/' ~ trick.title) }}">{{ trick.title }}</a>
+                <a href="{{ relative_path('/trick/' ~ trick.slug) }}">{{ trick.title }}</a>
                 <div class="w3-right">
-                    <a href="#">
+                    <a href="{{ relative_path('/modifier-trick/' ~ trick.slug) }}">
                         <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
                     </a>
                     <a href="#">

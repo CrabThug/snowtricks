@@ -21,17 +21,20 @@
                 <div class="w3-card">
                     <img class="w3-image" src="images/tricks/ZYdken1.jpg">
                     <div class="w3-container w3-padding">
-                        <a href="{{ relative_path('/trick/details/' ~ trick.title) }}">{{ trick.title }}</a>
+                        <a href="{{ path('trick_show', {'slug': trick.slug}) }}">{{ trick.title }}</a>
                         <div class="w3-right">
-                            <a href="#">
+                            <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
                                 <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
                             </a>
-                            <a href="#">
+                            <a onclick="document.getElementById('{{'modal' ~ trick.id }}').style.display='block'" style="cursor: pointer">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </a>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div id="{{'modal' ~ trick.id }}" class="w3-modal w3-animate-opacity">
+                {{ include('trick/_delete_form.html.twig') }}
             </div>
         {% endfor %}
     </div>
