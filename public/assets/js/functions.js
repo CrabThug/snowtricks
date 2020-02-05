@@ -66,12 +66,12 @@ function pagination() {
 }
 
 // setup an "add a tag" link
-var $addImageLink = $('<a href="#" class="add_image_link">Ajouter une image</a>');
-var $newLinkLi = $('<li></li>').append($addImageLink);
+var $addImageLink = $('<a href="#" class="add_image_link w3-button w3-blue w3-round"">Ajouter une Image</a>');
+var $newLinkLi = $('<li class="w3-col s12"></li>').append($addImageLink);
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     // Get the ul that holds the collection of tags
-    var $collectionHolder = $('ul.image');
+    var $collectionHolder = $('ul.images');
 
     // add the "add a tag" anchor and li to the tags ul
     $collectionHolder.append($newLinkLi);
@@ -80,15 +80,13 @@ jQuery(document).ready(function() {
     // index when inserting a new item (e.g. 2)
     $collectionHolder.data('index', $collectionHolder.find(':input').length);
 
-    $addImageLink.on('click', function(e) {
+    $addImageLink.on('click', function (e) {
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
 
         // add a new tag form (see code block below)
         addImageForm($collectionHolder, $newLinkLi);
     });
-
-
 });
 
 function addImageForm($collectionHolder, $newLinkLi) {
@@ -106,15 +104,17 @@ function addImageForm($collectionHolder, $newLinkLi) {
     $collectionHolder.data('index', index + 1);
 
     // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $('<li></li>').append(newForm);
+    var $newFormLi = $(
+        '<div class="w3-col s3 w3-padding w3-display-container w3-border w3-margin"></div>'
+    ).append(newForm);
 
     // also add a remove button, just for this example
-    $newFormLi.append('<a href="#" class="remove-image">x</a>');
+    $newFormLi.append('<a href="#" class="remove-image w3-display-topright"><i class="fa fa-times w3-text-red w3-padding" aria-hidden="true"></i></a>');
 
     $newLinkLi.before($newFormLi);
 
     // handle the removal, just for this example
-    $('.remove-image').click(function(e) {
+    $('.remove-image').click(function (e) {
         e.preventDefault();
 
         $(this).parent().remove();
@@ -124,10 +124,10 @@ function addImageForm($collectionHolder, $newLinkLi) {
 }
 
 // setup an "add a tag" link
-var $addMovieLink = $('<a href="#" class="add_movie_link">Ajouter une video</a>');
-var $newMovieLinkLi = $('<li></li>').append($addMovieLink);
+var $addMovieLink = $('<a href="#" class="add_movie_link w3-button w3-blue w3-round">Ajouter une video</a>');
+var $newMovieLinkLi = $('<li class="w3-col s12"></li>').append($addMovieLink);
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     // Get the ul that holds the collection of tags
     var $collectionMovies = $('ul.movies');
 
@@ -138,7 +138,7 @@ jQuery(document).ready(function() {
     // index when inserting a new item (e.g. 2)
     $collectionMovies.data('index', $collectionMovies.find(':input').length);
 
-    $addMovieLink.on('click', function(e) {
+    $addMovieLink.on('click', function (e) {
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
 
@@ -164,15 +164,17 @@ function addMovieForm($collectionMovies, $newMovieLinkLi) {
     $collectionMovies.data('index', index + 1);
 
     // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $('<li></li>').append(newForm);
+    var $newFormLi = $(
+        '<div class="w3-col s3 w3-padding w3-display-container w3-border w3-margin"></div>'
+    ).append(newForm);
 
     // also add a remove button, just for this example
-    $newFormLi.append('<a href="#" class="remove-movie">x</a>');
+    $newFormLi.append('<a href="#" class="remove-image w3-display-topright"><i class="fa fa-times w3-text-red w3-padding" aria-hidden="true"></i></a>');
 
     $newMovieLinkLi.before($newFormLi);
 
     // handle the removal, just for this example
-    $('.remove-movie').click(function(e) {
+    $('.remove-movie').click(function (e) {
         e.preventDefault();
 
         $(this).parent().remove();
@@ -180,3 +182,4 @@ function addMovieForm($collectionMovies, $newMovieLinkLi) {
         return false;
     });
 }
+
