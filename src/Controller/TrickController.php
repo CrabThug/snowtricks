@@ -45,8 +45,6 @@ class TrickController extends AbstractController
             if ($movies = $form->get('movies')->getData()) {
                 /** @var Movie $movie */
                 foreach ($movies as $movie) {
-                    $movieName = $fileUploader->upload($movie->getFile());
-                    $movie->setName($movieName);
                     $movie->setTrick($trick);
                 }
             }
@@ -89,7 +87,9 @@ class TrickController extends AbstractController
                 'slug' => $trick->getSlug()
             ]);
         }
+        // Todo hide comment if not logged
         $comment = $commentRepository->findBy(['trick' => $trick], ['creation' => 'desc'], 10);
+
 
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
@@ -140,14 +140,11 @@ class TrickController extends AbstractController
             if ($movies = $form->get('movies')->getData()) {
                 /** @var Movie $movie */
                 foreach ($movies as $movie) {
-                    $movieName = $fileUploader->upload($movie->getFile());
-                    $movie->setName($movieName);
                     $movie->setTrick($trick);
                 }
             }
 
             $trick->setSlug(strtolower(str_replace(' ', '-', $trick->getTitle())));
-
 
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('home');
@@ -167,7 +164,8 @@ class TrickController extends AbstractController
      */
     public function delete(Request $request, Trick $trick): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
+        // todo only if connected and role admin
+        if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($trick);
             $entityManager->flush();
