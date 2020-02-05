@@ -1,8 +1,23 @@
 {{ form_start(form) }}
 {{ form_errors(form.images) }}
 {{ form_errors(form.movies) }}
-<ul class="image" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
+<ul class="images w3-row-padding" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
 </ul>
-<ul class="movies" data-prototype="{{ form_widget(form.movies.vars.prototype)|e('html_attr') }}">
+<ul class="movies w3-row-padding" data-prototype="{{ form_widget(form.movies.vars.prototype)|e('html_attr') }}">
 </ul>
+<div class="w3-col s12 w3-row-padding">
+    <div class="w3-col s12">
+        {{ form_widget(form.title) }}
+    </div>
+    <div class="w3-col s12">
+        {{ form_widget(form.description) }}
+    </div>
+    <div class="w3-col s12">
+        {{ form_widget(form.category) }}
+    </div>
+    <div class="w3-col s12" style="max-width: 800px">
+        {{ form_widget(form.submit) }}
+    </div>
+</div>
 {{ form_end(form) }}
+
