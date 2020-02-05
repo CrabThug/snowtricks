@@ -59,6 +59,10 @@ a:hover {
     overflow: auto;
 }
 
+.overflow-none {
+    overflow: hidden;
+}
+
 .break-word {
     word-wrap: break-word
 }
