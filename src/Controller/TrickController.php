@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\Image;
 use App\Entity\Movie;
 use App\Entity\Trick;
+use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
@@ -15,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/trick")
@@ -27,7 +29,7 @@ class TrickController extends AbstractController
      * @param $fileUploader
      * @return Response
      */
-    public function new(Request $request, FileUploader $fileUploader): Response
+    public function new(Request $request, FileUploader $fileUploader, SluggerInterface $slugger): Response
     {
         $trick = new Trick();
         $form = $this->createForm(TrickType::class, $trick);
@@ -48,7 +50,7 @@ class TrickController extends AbstractController
                     $movie->setTrick($trick);
                 }
             }
-            $trick->setSlug(strtolower(str_replace(' ', '-', $trick->getTitle())));
+            $trick->setSlug($slugger->slug($trick->getTitle())->lower());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($trick);
             $entityManager->flush();
@@ -78,23 +80,23 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
             $comment->setTrick($trick);
-            //$comment->setUser('1'); //TODO add authentication
-
+            $comment->setUser($user);
             $entityManager->persist($comment);
             $entityManager->flush();
             return $this->redirectToRoute('trick_show', [
                 'slug' => $trick->getSlug()
             ]);
         }
-        // Todo hide comment if not logged
         $comment = $commentRepository->findBy(['trick' => $trick], ['creation' => 'desc'], 10);
-
 
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
             'form' => $form->createView(),
             'comment' => $comment,
+            'user' => $this->getUser(),
             'nComment' => $commentRepository->count(['trick' => $trick])
         ]);
     }
@@ -119,10 +121,11 @@ class TrickController extends AbstractController
      * @Route("/{slug}/edit", name="trick_edit", methods={"GET","POST"})
      * @param Request $request
      * @param Trick $trick
-     * @param $fileUploader
+     * @param FileUploader $fileUploader
+     * @param SluggerInterface $slugger
      * @return Response
      */
-    public function edit(Request $request, Trick $trick, FileUploader $fileUploader): Response
+    public function edit(Request $request, Trick $trick, FileUploader $fileUploader, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
@@ -144,7 +147,7 @@ class TrickController extends AbstractController
                 }
             }
 
-            $trick->setSlug(strtolower(str_replace(' ', '-', $trick->getTitle())));
+            $trick->setSlug($slugger->slug($trick->getTitle())->lower());
 
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('home');
@@ -164,12 +167,45 @@ class TrickController extends AbstractController
      */
     public function delete(Request $request, Trick $trick): Response
     {
-        // todo only if connected and role admin
         if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($trick);
             $entityManager->flush();
         }
+        return $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("image-delete/{id}", name="image_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Image $image
+     * @return Response
+     */
+    public function deleteImage(Request $request, Image $image): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$image->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($image);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("movie-delete/{id}", name="movie_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param Movie $movie
+     * @return Response
+     */
+    public function deleteMovie(Request $request, Movie $movie): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$movie->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($movie);
+            $entityManager->flush();
+        }
+
         return $this->redirectToRoute('home');
     }
 }
