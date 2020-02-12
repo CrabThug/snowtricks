@@ -20,13 +20,14 @@ class TrickType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'attr' => [
-                    'placeholder' => 'Choose a title'
+                    'placeholder' => 'Choose a title',
+                    'class' => "w3-margin-bottom"
                 ],
                 'label' => FALSE,
             ])
             ->add('description', TextareaType::class, [
                 'attr' => [
-                    'class' => 'break-word',
+                    'class' => 'break-word w3-input w3-border',
                     'placeholder' => 'Write a description',
                     'style' => 'min-height: 89px;height: 89px;max-width:600px;min-width:600px'
                 ],
