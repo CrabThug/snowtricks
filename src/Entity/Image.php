@@ -37,6 +37,11 @@ class Image
     private $file;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $bool;
+
+    /**
      * @return mixed
      */
     public function getFile()
@@ -89,6 +94,18 @@ class Image
     public function setAlt(string $alt): self
     {
         $this->alt = $alt;
+
+        return $this;
+    }
+
+    public function getBool(): ?bool
+    {
+        return $this->bool;
+    }
+
+    public function setBool(bool $bool): self
+    {
+        $this->bool = $bool;
 
         return $this;
     }
