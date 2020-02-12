@@ -17,25 +17,31 @@
     </div>
     <div class="w3-row-padding w3-margin-top" id="tricks">
         {% for trick in tricks %}
-            <div class="w3-third w3-margin-bottom" id="trick">
+            <div class="w3-col w3-margin-bottom trick-list" id="trick">
                 <div class="w3-card">
                     <img class="w3-image" src="images/tricks/ZYdken1.jpg">
                     <div class="w3-container w3-padding">
                         <a href="{{ path('trick_show', {'slug': trick.slug}) }}">{{ trick.title }}</a>
-                        <div class="w3-right">
-                            <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
-                                <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
-                            </a>
-                            <a onclick="document.getElementById('{{'modal' ~ trick.id }}').style.display='block'" style="cursor: pointer">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </a>
-                        </div>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <div class="w3-right">
+                                <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
+                                    <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
+                                </a>
+                                <a onclick="document.getElementById('{{ 'modal' ~ trick.id }}').style.display='block'"
+                                   style="cursor: pointer">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            <div id="{{'modal' ~ trick.id }}" class="w3-modal w3-animate-opacity">
+            <div id="{{ 'modal' ~ trick.id }}" class="w3-modal w3-animate-opacity">
                 {{ include('trick/_delete_form.html.twig') }}
             </div>
+        {% else %}
+            <div class="w3-padding w3-margin"><p class="w3-border w3-light-grey w3-center">aucun trick pour le
+                    moment</p></div>
         {% endfor %}
     </div>
     {% if tricks|length < nTricks %}

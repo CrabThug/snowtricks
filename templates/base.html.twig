@@ -19,15 +19,21 @@
 <div class="w3-top">
     <div class="w3-bar w3-black w3-card">
         <div class="w3-container" style="max-width: 1200px;margin:auto">
-            <a href="/" class="w3-bar-item w3-button" style="width:100%;max-width:82px"><img class="w3-image" src="{{ asset('images/logo.png') }}" alt="Logo"></a>
+            <a href="/" class="w3-bar-item w3-button" style="width:100%;max-width:82px"><img class="w3-image"
+                                                                                             src="{{ asset('images/logo.png') }}"
+                                                                                             alt="Logo"></a>
             <div class="w3-right">
                 <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="#"
                    onclick="navBar()" title="Toggle Navigation Menu">
                     <i class="fa fa-bars"></i>
                 </a>
-                <a href="{{ path('trick_new') }}" class="w3-bar-item w3-padding-large w3-hide-small">Add trick</a>
-                <a href="{{ path('app_login') }}" class="w3-bar-item w3-padding-large w3-hide-small">Sign in</a>
-                <a href="{{ path('app_register') }}" class="w3-bar-item w3-padding-large w3-hide-small">Sign up</a>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <a href="{{ path('trick_new') }}" class="w3-bar-item w3-padding-large w3-hide-small">Add trick</a>
+                    <a href="{{ path('app_logout') }}" class="w3-bar-item w3-padding-large w3-hide-small">Logout</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="w3-bar-item w3-padding-large w3-hide-small">Sign in</a>
+                    <a href="{{ path('app_register') }}" class="w3-bar-item w3-padding-large w3-hide-small">Sign up</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -36,7 +42,8 @@
     <!-- Navbar on small screens -->
     <div id="navMenu" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
         <a href="{{ path('app_login') }}" class="w3-bar-item w3-button w3-padding-large" onclick="navBar()">Sign in</a>
-        <a href="{{ path('app_register') }}" class="w3-bar-item w3-button w3-padding-large" onclick="navBar()">Sign up</a>
+        <a href="{{ path('app_register') }}" class="w3-bar-item w3-button w3-padding-large" onclick="navBar()">Sign
+            up</a>
     </div>
     {% block body %}{% endblock %}
     <footer>

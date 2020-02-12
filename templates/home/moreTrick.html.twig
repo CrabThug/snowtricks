@@ -1,17 +1,19 @@
 {% for trick in tricks %}
-    <div class="w3-third w3-margin-bottom" id="trick">
+    <div class="w3-col w3-margin-bottom trick-list" id="trick">
         <div class="w3-card">
             <img class="w3-image" src="images/tricks/ZYdken1.jpg">
             <div class="w3-container w3-padding">
                 <a href="{{ relative_path('/trick/' ~ trick.slug) }}">{{ trick.title }}</a>
-                <div class="w3-right">
-                    <a href="{{ relative_path('/modifier-trick/' ~ trick.slug) }}">
-                        <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
-                    </a>
-                    <a href="#">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                    </a>
-                </div>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div class="w3-right">
+                        <a href="{{ relative_path('/modifier-trick/' ~ trick.slug) }}">
+                            <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
