@@ -19,26 +19,31 @@ class Movie
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $url;
+    private $embed;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="movies")
      */
     private $trick;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $alt;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUrl(): ?string
+    public function getEmbed(): ?string
     {
-        return $this->url;
+        return $this->embed;
     }
 
-    public function setUrl(string $url): self
+    public function setEmbed(string $embed): self
     {
-        $this->url = $url;
+        $this->embed = $embed;
 
         return $this;
     }
@@ -51,6 +56,18 @@ class Movie
     public function setTrick(?Trick $trick): self
     {
         $this->trick = $trick;
+
+        return $this;
+    }
+
+    public function getAlt(): ?string
+    {
+        return $this->alt;
+    }
+
+    public function setAlt(string $alt): self
+    {
+        $this->alt = $alt;
 
         return $this;
     }
