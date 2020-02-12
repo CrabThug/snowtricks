@@ -76,3 +76,21 @@ li * {
     display: inline-block;
     list-style: none;
 }
+
+.trick-list {
+    max-width: 246px;
+}
+
+.thumb {
+    width: 100%;
+    max-width: 60px;
+    max-height: 60px;
+}
+
+.ml-5 {
+    margin-left: 5px
+}
+
+.m-a {
+    margin: auto
+}
