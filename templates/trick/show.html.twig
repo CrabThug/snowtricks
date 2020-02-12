@@ -7,7 +7,7 @@
     <div class="w3-content" style="max-width:1300px">
         <div class="w3-display-container">
             {% for image in trick.images %}
-                <img id="{{ image.id }} }}" class="mySlides" src="{{ asset(image_directory ~ image.name) }}"
+                <img id="{{ image.id }} }}" class="mySlides w3-image" src="{{ asset(image_directory ~ image.name) }}"
                      alt="{{ image.alt }}">
             {% endfor %}
             {% for movie in trick.movies %}
@@ -21,8 +21,8 @@
         <div class="w3-row-padding w3-section">
             {% for image in trick.images %}
                 <div class="w3-col s3">
-                    <img class="w3-opacity w3-hover-opacity-off" src="{{ asset(image_directory ~ image.name) }}"
-                         style="width:100%;cursor:pointer" alt="{{ image.alt }}" onclick="currentDiv({{ image.id }})">
+                    <img class="w3-opacity w3-hover-opacity-off w3-image" src="{{ asset(image_directory ~ image.name) }}"
+                         style="cursor:pointer" alt="{{ image.alt }}" onclick="currentDiv({{ image.id }})">
                 </div>
             {% endfor %}
             {% for movie in trick.movies %}
@@ -47,24 +47,38 @@
             </p>
         </div>
         <hr>
-        {{ form_start(form, {'attr': {'class': 'w3-container w3-center'}}) }}
-        <div class="w3-row-padding" style="max-width:500px;margin:auto;">
-            <div class="w3-col s8">
-                {{ form_widget(form.content) }}
+        {% if user %}
+            {{ form_start(form, {'attr': {'class': 'w3-container w3-center'}}) }}
+            <div class="w3-row-padding" style="max-width:500px;margin:auto;">
+                <div class="w3-col s8">
+                    {{ form_widget(form.content) }}
+                </div>
+                <div class="w3-col s4">
+                    <button class="w3-btn w3-blue w3-large">Laisser un commentaire</button>
+                </div>
             </div>
-            <div class="w3-col s4">
-                <button class="w3-btn w3-blue w3-large">Laisser un commentaire</button>
+            {{ form_end(form) }}
+        {% else %}
+            <div style="max-width:500px;margin:auto;">
+                <p class="w3-center w3-light-grey w3-padding">Connectez vous pour pouvoir rediger un commentaire.</p>
             </div>
-        </div>
-        {{ form_end(form) }}
+        {% endif %}
         <hr>
     </div>
     <div id="comments">
         {% for c in comment %}
             <div class="w3-margin" id="{{ c.id }}">
-                <div class="w3-row-padding" style="max-width: 500px;margin: auto">
-                    <div class="w3-col s2 w3-padding">{{ c.user }}</div>
-                    <div class="w3-col s10 w3-light-gray w3-padding break-word">{{ c.content }}</div>
+                <div class="w3-row-padding m-a" style="max-width: 500px;">
+                    <div class="w3-col s2 w3-center">
+                        <div style="height: 3.8vh">
+                            <img alt="profil_picture" class="thumb" src="{{ asset(profilPicture ~ c.user.picture) }}">
+                        </div>
+                        <span class="w3-center">{{ c.user.name }}</span>
+                    </div>
+                    <div class="w3-col s10 w3-light-gray w3-padding break-word">
+                        <span>le <c class="w3-text-blue">{{ c.creation|date("d/m/Y") }}</c> :</span>
+                        <span class="w3-col s12">{{ c.content }}</span>
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -80,6 +94,3 @@
         {{ parent() }}
     {% endblock %}
 {% endblock %}
-
-
-

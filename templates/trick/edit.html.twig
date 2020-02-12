@@ -5,6 +5,38 @@
 {% block body %}
     <div style="margin-top: 150px">
         <h1>Edit Trick</h1>
+        <div class="w3-row-padding w3-section">
+            {% for image in trick.images %}
+                <div class="w3-col s3">
+                    <div class="w3-display-container">
+                        <img src="{{ asset(image_directory ~ image.name) }}" class="w3-image" alt="{{ image.alt }}">
+                        <a onclick="document.getElementById('{{ 'modal' ~ image.id }}').style.display='block'"
+                           class="w3-display-topright w3-padding w3-button">
+                            <i class="fa fa-trash w3-text-red" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <div id="{{ 'modal' ~ image.id }}" class="w3-modal w3-animate-opacity">
+                    {{ include('image/_delete_form.html.twig') }}
+                </div>
+            {% endfor %}
+            {% for movie in trick.movies %}
+                <div class="w3-col s3">
+                    <div class="w3-display-container">
+                        <img class="w3-image" src="{{ asset('images/tricks/ZYdken1.jpg') }}" alt="{{ movie.alt }}">
+                        <a onclick="document.getElementById('{{ 'modal' ~ movie.id }}').style.display='block'"
+                           class="w3-display-topright w3-padding w3-button"
+                           style="cursor: pointer">
+                            <i class="fa fa-trash w3-text-red" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <div id="{{ 'modal' ~ movie.id }}" class="w3-modal w3-animate-opacity">
+                    {{ include('movie/_delete_form.html.twig') }}
+                </div>
+            {% endfor %}
+        </div>
         {{ include('trick/_form.html.twig') }}
     </div>
+    {# todo show image with case for first + delete method in ajax #}
 {% endblock %}

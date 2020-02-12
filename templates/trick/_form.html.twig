@@ -18,6 +18,6 @@
     <div class="w3-col s12" style="max-width: 800px">
         {{ form_widget(form.submit) }}
     </div>
+    {{ form_row(form._token) }}
 </div>
-{{ form_end(form) }}
-
+{{ form_end(form, {'render_rest' : false}) }}
