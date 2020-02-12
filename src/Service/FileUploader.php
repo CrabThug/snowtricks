@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class FileUploader
 {
     private $targetDirectory;
+    private $dateTime;
 
     public function __construct($targetDirectory)
     {
@@ -16,7 +17,8 @@ class FileUploader
 
     public function upload(UploadedFile $file)
     {
-        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $dateTime = new \DateTime();
+        $originalFilename = $dateTime->getTimestamp() . '-' . pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
         $fileName = $safeFilename . '-' . uniqid('', TRUE) . '.' . $file->guessExtension();
 
