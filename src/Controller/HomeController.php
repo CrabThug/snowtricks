@@ -3,7 +3,6 @@
 
 namespace App\Controller;
 
-
 use App\Repository\TrickRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +34,7 @@ class HomeController extends AbstractController
     {
         $start = $request->request->get('start');
 
-        return $this->render('home/moreTrick.html.twig', [
+        return $this->render('home/trick.html.twig', [
             'tricks' => $trickRepository->findBy([], ['created' => 'desc'], 15, $start),
         ]);
     }

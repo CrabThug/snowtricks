@@ -9,7 +9,8 @@
                         <a href="{{ relative_path('/modifier-trick/' ~ trick.slug) }}">
                             <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
                         </a>
-                        <a href="#">
+                        <a onclick="document.getElementById('{{ 'modal' ~ trick.id }}').style.display='block'"
+                           style="cursor: pointer">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -17,5 +18,11 @@
             </div>
         </div>
     </div>
-{% endfor %}
+    <div id="{{ 'modal' ~ trick.id }}" class="w3-modal w3-animate-opacity">
+        {{ include('trick/_delete_form.html.twig') }}
+    </div>
+{% else %}
+    <div class="w3-padding w3-margin"><p class="w3-border w3-light-grey w3-center">aucun trick pour le
+            moment</p></div>
 
+{% endfor %}
