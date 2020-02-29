@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MovieRepository")
@@ -17,6 +18,8 @@ class Movie
     private $id;
 
     /**
+     * @Assert\Url()
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255)
      */
     private $embed;

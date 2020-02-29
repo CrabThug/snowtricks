@@ -6,9 +6,20 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use App\Entity\Trick;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class TrickFixtures extends Fixture implements DependentFixtureInterface
 {
+    /**
+     * @var SluggerInterface
+     */
+    private SluggerInterface $slugger;
+
+    public function __construct(SluggerInterface $slugger)
+    {
+        $this->slugger = $slugger;
+    }
+
     /**
      * @param ObjectManager $manager
      *
@@ -17,7 +28,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $tricksName = [
-            ['Mute', 'saisie de la carre frontside de la planche entre les deux pieds avec la main avant', 'Grabs'],
+            ['Mute', 'saisie de la carre frontside de la planche entre les deux pieds avec la main avant'],
             ['Indy', 'saisie de la carre frontside de la planche, entre les deux pieds, avec la main arrière'],
             ['Stalefish', 'saisie de la carre backside de la planche entre les deux pieds avec la main arrière'],
             ['360', 'trois six pour un tour complet'],
@@ -34,11 +45,11 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
             ['Method Air', "Attraper sa planche d'une main et la tourner perpendiculairement au sol"]
         ];
 
-        for ($i = 0, $iMax = \count($tricksName); $i < $iMax; $i++) {
+        foreach ($tricksName as $iValue) {
             $trick = new Trick();
-            $trick->setTitle($tricksName[$i][0])
-                ->setSlug(strtolower(str_replace(' ', '-', $tricksName[$i][0])))
-                ->setDescription($tricksName[$i][1])
+            $trick->setTitle($iValue[0])
+                ->setSlug($this->slugger->slug($iValue[0])->lower())
+                ->setDescription($iValue[1])
                 ->setCategory($this->getReference('category-' . rand(0, 6)));
             $manager->persist($trick);
         }

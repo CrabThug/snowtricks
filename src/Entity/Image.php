@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
@@ -32,7 +33,7 @@ class Image
     private $alt;
 
     /**
-     * @var mixed
+     * @var UploadedFile
      */
     private $file;
 

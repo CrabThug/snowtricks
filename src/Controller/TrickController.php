@@ -10,9 +10,11 @@ use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
+use App\Repository\ImageRepository;
 use App\Service\FileUploader;
+use App\Service\TrickHandler;
+use App\Service\UrlExtract;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,48 +23,56 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 /**
  * @Route("/trick")
  */
-class TrickController extends AbstractController
+class TrickController extends BaseController
 {
     /**
      * @Route("/new", name="trick_new", methods={"GET","POST"})
      * @param Request $request
-     * @param $fileUploader
+     * @param FileUploader $fileUploader
+     * @param UrlExtract $urlExtract
+     * @param SluggerInterface $slugger
+     * @param $imageRepository
      * @return Response
      */
-    public function new(Request $request, FileUploader $fileUploader, SluggerInterface $slugger): Response
+    public function new(Request $request, FileUploader $fileUploader, UrlExtract $urlExtract, SluggerInterface $slugger): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
         $trick = new Trick();
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($images = $form->get('images')->getData()) {
-                /** @var Image $image */
-                foreach ($images as $image) {
+            /** @var Image $image */
+            foreach ($trick->getImages() as $image) {
+                if (!$image->getId()) {
                     $imageName = $fileUploader->upload($image->getFile());
+
+                    if (!$image->findOneBy(['bool' => 1])) {
+                        $image->setBool(TRUE);
+                    }
                     $image->setName($imageName);
                     $image->setTrick($trick);
                 }
             }
-            if ($movies = $form->get('movies')->getData()) {
-                /** @var Movie $movie */
-                foreach ($movies as $movie) {
+            /** @var Movie $movie */
+            foreach ($trick->getMovies() as $movie) {
+                if (!$movie->getId()) {
                     $movie->setTrick($trick);
+                    $movieEmbed = $urlExtract->extract($movie->getEmbed());
+                    $movie->setEmbed($movieEmbed);
                 }
             }
             $trick->setSlug($slugger->slug($trick->getTitle())->lower());
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($trick);
-            $entityManager->flush();
+            $this->entityManager->persist($trick);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('trick_show', [
                 'slug' => $trick->getSlug()
             ]);
         }
 
-        return $this->render('trick/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->render('trick/new.html.twig', ['form' => $form->createView(),
+            'trick' => $trick]);
     }
 
     /**
@@ -73,7 +83,8 @@ class TrickController extends AbstractController
      * @param CommentRepository $commentRepository
      * @return Response
      */
-    public function show(Request $request, Trick $trick, EntityManagerInterface $entityManager, CommentRepository $commentRepository): Response
+    public
+    function show(Request $request, Trick $trick, EntityManagerInterface $entityManager, CommentRepository $commentRepository): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -108,7 +119,8 @@ class TrickController extends AbstractController
      * @param CommentRepository $commentRepository
      * @return Response
      */
-    public function pagination(Request $request, Trick $trick, CommentRepository $commentRepository)
+    public
+    function pagination(Request $request, Trick $trick, CommentRepository $commentRepository)
     {
         $start = $request->request->get('start');
 
@@ -121,36 +133,30 @@ class TrickController extends AbstractController
      * @Route("/{slug}/edit", name="trick_edit", methods={"GET","POST"})
      * @param Request $request
      * @param Trick $trick
-     * @param FileUploader $fileUploader
-     * @param SluggerInterface $slugger
+     * @param TrickHandler $trickHandler
      * @return Response
      */
-    public function edit(Request $request, Trick $trick, FileUploader $fileUploader, SluggerInterface $slugger): Response
+    public
+    function edit(Request $request, Trick $trick, TrickHandler $trickHandler): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-
-            if ($images = $form->get('images')->getData()) {
-                /** @var Image $image */
-                foreach ($images as $image) {
-                    $imageName = $fileUploader->upload($image->getFile());
-                    $image->setName($imageName);
-                    $image->setTrick($trick);
-                }
-            }
-            if ($movies = $form->get('movies')->getData()) {
-                /** @var Movie $movie */
-                foreach ($movies as $movie) {
+            $trickHandler->handle($trick);
+            /*/** @var Movie $movie */
+            /*foreach ($trick->getMovies() as $movie) {
+                if (!$movie->getId()) {
                     $movie->setTrick($trick);
-                }
-            }
+                    $movieEmbed = $urlExtract->extract($movie->getEmbed());
+                    $movie->setEmbed($movieEmbed);
+                    $this->entityManager->persist($movie);
+                }*/
 
-            $trick->setSlug($slugger->slug($trick->getTitle())->lower());
-
-            $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('trick_show', [
+                'slug' => $trick->getSlug()
+            ]);
         }
 
         return $this->render('trick/edit.html.twig', [
@@ -165,12 +171,13 @@ class TrickController extends AbstractController
      * @param Trick $trick
      * @return Response
      */
-    public function delete(Request $request, Trick $trick): Response
+    public
+    function delete(Request $request, Trick $trick): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
         if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($trick);
-            $entityManager->flush();
+            $this->entityManager->remove($trick);
+            $this->entityManager->flush();
         }
         return $this->redirectToRoute('home');
     }
@@ -181,14 +188,14 @@ class TrickController extends AbstractController
      * @param Image $image
      * @return Response
      */
-    public function deleteImage(Request $request, Image $image): Response
+    public
+    function deleteImage(Request $request, Image $image): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$image->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($image);
-            $entityManager->flush();
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        if ($this->isCsrfTokenValid('delete' . $image->getId(), $request->request->get('_token'))) {
+            $this->entityManager->remove($image);
+            $this->entityManager->flush();
         }
-
         return $this->redirectToRoute('home');
     }
 
@@ -198,12 +205,13 @@ class TrickController extends AbstractController
      * @param Movie $movie
      * @return Response
      */
-    public function deleteMovie(Request $request, Movie $movie): Response
+    public
+    function deleteMovie(Request $request, Movie $movie): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$movie->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($movie);
-            $entityManager->flush();
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        if ($this->isCsrfTokenValid('delete' . $movie->getId(), $request->request->get('_token'))) {
+            $this->entityManager->remove($movie);
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute('home');

@@ -14,16 +14,16 @@
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     {% endblock %}
 </head>
-<body>
+<body class="w3-light-gray" style="padding-bottom: 15px;">
 <!-- Navbar -->
 <div class="w3-top">
     <div class="w3-bar w3-black w3-card">
         <div class="w3-container" style="max-width: 1200px;margin:auto">
-            <a href="/" class="w3-bar-item w3-button" style="width:100%;max-width:82px"><img class="w3-image"
-                                                                                             src="{{ asset('images/logo.png') }}"
-                                                                                             alt="Logo"></a>
+            <a href="/" class="w3-bar-item w3-button" style="width:100%;max-width:82px">
+                <img class="w3-image" src="{{ asset('images/logo.png') }}" alt="Logo">
+            </a>
             <div class="w3-right">
-                <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="#"
+                <a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right"
                    onclick="navBar()" title="Toggle Navigation Menu">
                     <i class="fa fa-bars"></i>
                 </a>
@@ -38,20 +38,28 @@
         </div>
     </div>
 </div>
-<div id="page">
+<div class="">
     <!-- Navbar on small screens -->
     <div id="navMenu" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
         <a href="{{ path('app_login') }}" class="w3-bar-item w3-button w3-padding-large" onclick="navBar()">Sign in</a>
         <a href="{{ path('app_register') }}" class="w3-bar-item w3-button w3-padding-large" onclick="navBar()">Sign
             up</a>
     </div>
-    {% block body %}{% endblock %}
-    <footer>
-        <p class="w3-padding w3-margin-left">Copyright &copy; 2019</p>
-    </footer>
+    <div class="w3-round w3-white" style="margin: auto;max-width: 1170px">
+        <div style="margin-top: 45px">
+            {% block body %}{% endblock %}
+        </div>
+        {% block footer %}
+            <footer class="w3-center">
+                <p>Copyright &copy; 2019</p>
+            </footer>
+        {% endblock footer %}
+    </div>
 </div>
 {% block javascripts %}
     <script src="{{ asset('assets/js/jquery.js') }}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
+    <script src="{{ asset('assets/js/collection.js') }}"></script>
     <script src="{{ asset('assets/js/functions.js') }}"></script>
 {% endblock %}
 </body>

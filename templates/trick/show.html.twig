@@ -3,38 +3,66 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-    <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">edit</a>
-    <div class="w3-content" style="max-width:1300px">
-        <div class="w3-display-container">
-            {% for image in trick.images %}
-                <img id="{{ image.id }} }}" class="mySlides w3-image" src="{{ asset(image_directory ~ image.name) }}"
+    <div class="w3-display-container div-image w3-gray">
+        {% for image in trick.images %}
+            {% if image.bool == 1 %}
+                <img id="{{ image.id }}" class="image"
+                     src="{{ asset(image_directory ~ image.name) }}"
                      alt="{{ image.alt }}">
-            {% endfor %}
-            {% for movie in trick.movies %}
-                <img class="mySlides" src="#" alt="{{ movie.alt }}">
-            {% endfor %}
-            <div class="w3-display-middle w3-blue w3-padding">
-                {{ trick.title }}
+            {% endif %}
+        {% endfor %}
+        <tag class="w3-display-middle w3-text-white w3-black w3-tag w3-round padding-lr w3-xxlarge">
+            {{ trick.title|capitalize }}
+        </tag>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="w3-display-topright w3-blue">
+                <a class="w3-button" href="{{ path('trick_edit', {'slug' : trick.slug }) }}">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                <a class="w3-button" onclick="$('#modal').show()">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
             </div>
-        </div>
+            <div id="modal" class="w3-modal w3-animate-opacity">
+                {{ include('trick/_delete_form.html.twig') }}
+            </div>
+        {% endif %}
+    </div>
 
-        <div class="w3-row-padding w3-section">
+    <div>
+        <div class="w3-row-padding w3-section" id="carousel">
+            {% set media = 0 %}
             {% for image in trick.images %}
-                <div class="w3-col s3">
-                    <img class="w3-opacity w3-hover-opacity-off w3-image" src="{{ asset(image_directory ~ image.name) }}"
-                         style="cursor:pointer" alt="{{ image.alt }}" onclick="currentDiv({{ image.id }})">
+                {% set media = media + 1 %}
+                <div class="w3-col m4 s6 carouselItem padding-8" id="{{ media }}">
+                    <img class="w3-opacity w3-hover-opacity-off w3-image"
+                         src="{{ asset(image_directory ~ image.name) }}"
+                         alt="{{ image.alt }}">
                 </div>
             {% endfor %}
             {% for movie in trick.movies %}
-                <div class="w3-col s3">
-                    <img class="w3-opacity w3-hover-opacity-off" src="{{ asset('images/tricks/ZYdken1.jpg') }}"
-                         style="width:100%;cursor:pointer" alt="{{ movie.alt }}" onclick="currentDiv({{ movie.id }})">
+                {% set media = media + 1 %}
+                <div class="w3-col m4 s6 carouselItem padding-8" id="{{ media }}">
+                    <div class="video-container w3-opacity w3-hover-opacity-off w3-image">
+                        <iframe src="{{ movie.embed }}"
+                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
                 </div>
             {% endfor %}
         </div>
+        {% if trick.images|length + trick.movies|length > 4 %}
+            <div class="w3-padding" id="mediaSlide" n="{{ trick.images|length + trick.movies|length }}">
+                <div class="w3-left w3-button w3-blue w3-round carouselBtn w3-disabled" id="slideP" v="-1">Precedent
+                </div>
+                <div class="w3-right w3-button w3-blue w3-round carouselBtn" id="slideN" v="1">Suivant</div>
+            </div>
+        {% endif %}
     </div>
+
     <div class="w3-container">
-        <p id="description" class="w3-center">{{ trick.description }}</p>
+        <p id="description" class="w3-center">{{ trick.description|capitalize }}</p>
         <div class="w3-center">
             <p>
                 <span class="w3-tag w3-blue w3-round">{{ trick.category.name }}</span>
@@ -50,10 +78,10 @@
         {% if user %}
             {{ form_start(form, {'attr': {'class': 'w3-container w3-center'}}) }}
             <div class="w3-row-padding" style="max-width:500px;margin:auto;">
-                <div class="w3-col s8">
+                <div class="w3-col s12 m8">
                     {{ form_widget(form.content) }}
                 </div>
-                <div class="w3-col s4">
+                <div class="w3-col s12 m4">
                     <button class="w3-btn w3-blue w3-large">Laisser un commentaire</button>
                 </div>
             </div>
@@ -90,7 +118,4 @@
             {% endfor %}
         </div>
     {% endif %}
-    {% block javascripts %}
-        {{ parent() }}
-    {% endblock %}
 {% endblock %}

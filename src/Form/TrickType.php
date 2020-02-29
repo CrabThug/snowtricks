@@ -21,22 +21,21 @@ class TrickType extends AbstractType
             ->add('title', TextType::class, [
                 'attr' => [
                     'placeholder' => 'Choose a title',
-                    'class' => "w3-margin-bottom"
+                    'class' => "w3-padding",
                 ],
                 'label' => FALSE,
             ])
             ->add('description', TextareaType::class, [
                 'attr' => [
-                    'class' => 'break-word w3-input w3-border',
+                    'class' => 'break-word w3-border w3-padding',
                     'placeholder' => 'Write a description',
-                    'style' => 'min-height: 89px;height: 89px;max-width:600px;min-width:600px'
                 ],
                 'label' => FALSE,
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
-                'attr' => ['class' => 'w3-select w3-margin-bottom w3-margin-top w3-col s2'],
+                'attr' => ['class' => 'w3-select'],
                 'label' => FALSE,
             ])
             ->add('images', CollectionType::class, [
@@ -53,8 +52,8 @@ class TrickType extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
-                    'class' => 'w3-btn w3-blue w3-round w3-right',
-                    'style' => 'margin-top: 50px'
+                    'class' => 'w3-btn w3-blue w3-round',
+
                 ]
             ]);
     }

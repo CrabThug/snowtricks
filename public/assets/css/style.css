@@ -3,15 +3,14 @@ body {
     height: 100%;
 }
 
-#page {
-    max-width: 1250px;
-    margin: auto;
-}
-
 hr {
     max-width: 650px;
     margin-left: auto;
     margin-right: auto;
+}
+
+footer p {
+    padding-bottom: 25px;
 }
 
 a {
@@ -77,8 +76,9 @@ li * {
     list-style: none;
 }
 
-.trick-list {
-    max-width: 246px;
+#trick {
+    width: 20%;
+    border-radius: 0 0 25px 25px !important;
 }
 
 .thumb {
@@ -93,4 +93,82 @@ li * {
 
 .m-a {
     margin: auto
+}
+
+iframe{
+    border:0;
+}
+.div-image{
+    position: relative;
+    padding-bottom: 52%;
+    padding-top: 30px;
+    height: 0;
+    overflow: hidden;
+}
+
+.image, .iframe-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.iframe-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+}
+
+.form-container {
+    max-width: 800px;
+    margin: auto;
+}
+
+textarea {
+    min-height: 89px;
+    height: 89px;
+    max-width: 100%;
+    min-width: 100%
+}
+
+select {
+    max-width: 175px;
+}
+
+.padding-lr {
+    padding: -6px 12px -12px 12px !important;
+}
+
+.gainsboro {
+    background-color: #DCDCDC !important;
+}
+
+#carousel {
+    display: flex;
+    overflow: hidden;
+}
+
+.carouselItem {
+    flex-shrink: 0;
+    /*display: none;*/
+}
+
+@media screen and (min-width: 1200px) {
+    .carouselItem {
+        width: 25% !important;
+    }
+}
+
+.margin-8 {
+    margin: 0 8px;
+}
+
+.padding-8 {
+    padding: 0 8px;
+}
+
+li {
+    /*max-width: 500px;*/
 }

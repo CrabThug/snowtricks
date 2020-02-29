@@ -7,37 +7,12 @@ function navBar() {
     }
 }
 
-function currentDiv(n) {
-    showDivs(slideIndex = n);
-}
-
-function showDivs(n) {
-    let i;
-    let x = document.getElementsByClassName("mySlides");
-    let dots = document.getElementsByClassName("demo");
-    if (n > x.length) {
-        slideIndex = 1
-    }
-    if (n < 1) {
-        slideIndex = x.length
-    }
-    for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
-    }
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" w3-opacity-off", "");
-    }
-    x[slideIndex - 1].style.display = "block";
-    dots[slideIndex - 1].className += " w3-opacity-off";
-}
-
 function scrollToTrick() {
     window.scrollTo(0, document.getElementById('tricks').offsetTop - 60);
 }
 
-function showMoreTrick() {
-
-    let tricks = $('#tricks').find('.w3-third').length;
+function showMoreTrick(e) {
+    let tricks = $('#tricks').find('.ntrick').length;
     $('#arrowup').toggleClass('w3-hide');
     $.post("show-more-trick",
         {
@@ -45,8 +20,8 @@ function showMoreTrick() {
         },
         function (data, status) {
             $("#tricks").append(data);
-            let n = $('#showMore').attr('n');
-            let tricks = $('#tricks').find('.w3-third').length;
+            let n = $("#showMore").attr('n');
+            let tricks = $('#tricks').find('.ntrick').length;
             if (n <= tricks) {
                 $('#showMore').hide();
             }
@@ -65,121 +40,52 @@ function pagination() {
         });
 }
 
-// setup an "add a tag" link
-var $addImageLink = $('<a href="#" class="add_image_link w3-button w3-blue w3-round"">Ajouter une Image</a>');
-var $newLinkLi = $('<li class="w3-col s12"></li>').append($addImageLink);
+$(document).ready(function () {
+    // definir le nombre a afficher ( pour savoir quand griser bouton )
+    var t = $('#mediaSlide').attr('n');
+    console.log(t);
+    var n = $('#slideN');
+    var p = $('#slideP');
+    var c = $("#carousel");
+    var cI = $('.carouselItem').width() + 16;
+    showable();
 
-jQuery(document).ready(function () {
-    // Get the ul that holds the collection of tags
-    var $collectionHolder = $('ul.images');
-
-    // add the "add a tag" anchor and li to the tags ul
-    $collectionHolder.append($newLinkLi);
-
-    // count the current form inputs we have (e.g. 2), use that as the new
-    // index when inserting a new item (e.g. 2)
-    $collectionHolder.data('index', $collectionHolder.find(':input').length);
-
-    $addImageLink.on('click', function (e) {
-        // prevent the link from creating a "#" on the URL
-        e.preventDefault();
-
-        // add a new tag form (see code block below)
-        addImageForm($collectionHolder, $newLinkLi);
+    $('.carouselBtn').click(function () {
+        if (Math.sign($(this).attr('v')) === 1 && $(this).attr('n') < t) {
+            c0 = c.scrollLeft();
+            c.scrollLeft(c0 + cI);
+            n.attr('n', parseInt(n.attr('n')) + 1);
+            p.attr('n', parseInt(p.attr('n')) + 1);
+        } else if (Math.sign($(this).attr('v')) === -1 && $(this).attr('n') > 1) {
+            c0 = c.scrollLeft();
+            c.scrollLeft(c0 - cI);
+            n.attr('n', n.attr('n') - 1);
+            p.attr('n', p.attr('n') - 1);
+        }
+        carouselBtn();
     });
 });
 
-function addImageForm($collectionHolder, $newLinkLi) {
-    // Get the data-prototype explained earlier
-    var prototype = $collectionHolder.data('prototype');
-
-    // get the new index
-    var index = $collectionHolder.data('index');
-
-    // Replace '$$name$$' in the prototype's HTML to
-    // instead be a number based on how many items we have
-    var newForm = prototype.replace(/__name__/g, index);
-
-    // increase the index with one for the next item
-    $collectionHolder.data('index', index + 1);
-
-    // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $(
-        '<div class="w3-col s3 w3-padding w3-display-container w3-border w3-margin"></div>'
-    ).append(newForm);
-
-    // also add a remove button, just for this example
-    $newFormLi.append('<a href="#" class="remove-image w3-display-topright"><i class="fa fa-times w3-text-red w3-padding" aria-hidden="true"></i></a>');
-
-    $newLinkLi.before($newFormLi);
-
-    // handle the removal, just for this example
-    $('.remove-image').click(function (e) {
-        e.preventDefault();
-
-        $(this).parent().remove();
-
-        return false;
-    });
+function showable() {
+    // definir le nombre affichable
+    var countItm = Math.round($('#carousel').width() / $('.carouselItem').width());
+    // donner valeur au bouton +/-
+    $('#slideP').attr('n', 1);
+    $('#slideN').attr('n', countItm);
 }
 
-// setup an "add a tag" link
-var $addMovieLink = $('<a href="#" class="add_movie_link w3-button w3-blue w3-round">Ajouter une video</a>');
-var $newMovieLinkLi = $('<li class="w3-col s12"></li>').append($addMovieLink);
-
-jQuery(document).ready(function () {
-    // Get the ul that holds the collection of tags
-    var $collectionMovies = $('ul.movies');
-
-    // add the "add a tag" anchor and li to the tags ul
-    $collectionMovies.append($newMovieLinkLi);
-
-    // count the current form inputs we have (e.g. 2), use that as the new
-    // index when inserting a new item (e.g. 2)
-    $collectionMovies.data('index', $collectionMovies.find(':input').length);
-
-    $addMovieLink.on('click', function (e) {
-        // prevent the link from creating a "#" on the URL
-        e.preventDefault();
-
-        // add a new tag form (see code block below)
-        addMovieForm($collectionMovies, $newMovieLinkLi);
-    });
-
-
-});
-
-function addMovieForm($collectionMovies, $newMovieLinkLi) {
-    // Get the data-prototype explained earlier
-    var prototype = $collectionMovies.data('prototype');
-
-    // get the new index
-    var index = $collectionMovies.data('index');
-
-    // Replace '$$name$$' in the prototype's HTML to
-    // instead be a number based on how many items we have
-    var newForm = prototype.replace(/__name__/g, index);
-
-    // increase the index with one for the next item
-    $collectionMovies.data('index', index + 1);
-
-    // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $(
-        '<div class="w3-col s3 w3-padding w3-display-container w3-border w3-margin"></div>'
-    ).append(newForm);
-
-    // also add a remove button, just for this example
-    $newFormLi.append('<a href="#" class="remove-image w3-display-topright"><i class="fa fa-times w3-text-red w3-padding" aria-hidden="true"></i></a>');
-
-    $newMovieLinkLi.before($newFormLi);
-
-    // handle the removal, just for this example
-    $('.remove-movie').click(function (e) {
-        e.preventDefault();
-
-        $(this).parent().remove();
-
-        return false;
-    });
+function carouselBtn() {
+    var t = $('#mediaSlide').attr('n');
+    var n = $('#slideN');
+    var p = $('#slideP');
+    if (n.attr('n') === t) {
+        n.addClass('w3-disabled');
+    } else {
+        n.removeClass('w3-disabled');
+    }
+    if (p.attr('n') > 1) {
+        p.removeClass('w3-disabled');
+    } else {
+        p.addClass('w3-disabled');
+    }
 }
-

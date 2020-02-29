@@ -4,16 +4,29 @@
 
 {% block body %}
     {# todo add picture #}
-    <div style="margin-top: 150px">
-        <h1>Register</h1>
+    <div class="w3-center w3-light-gray w3-padding-64">
+        <div class="w3-white w3-padding-64 w3-round" style="max-width: 600px; margin: auto">
+            <h1>Register</h1>
 
-        {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.name) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button class="btn">Register</button>
-        {{ form_end(registrationForm) }}
+            {{ form_start(registrationForm) }}
+            <div class="w3-margin">
+                {{ form_row(registrationForm.name) }}
+            </div>
+            <div class="w3-margin">
+                {{ form_row(registrationForm.email) }}
+            </div>
+            <div class="w3-margin">
+                {{ form_row(registrationForm.plainPassword) }}
+            </div>
+            <div class="w3-margin">
+                {{ form_row(registrationForm.agreeTerms) }}
+            </div>
+            <div class="w3-margin">
+                <button class="w3-btn w3-blue">Register</button>
+            </div>
+            {{ form_end(registrationForm) }}
+        </div>
     </div>
 {% endblock %}
+
+{% block footer %}{% endblock footer %}

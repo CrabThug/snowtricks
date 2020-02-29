@@ -5,7 +5,7 @@
 {% block body %}
 
     <div id="intro" class="w3-display-container">
-        <img src="images/wallp.jpg" alt="Lights" class="w3-image">
+        <img src="{{ asset('images/wallp.jpg') }}" alt="Lights" class="w3-image">
         <div class="w3-center w3-display-middle">
             <p class="w3-normal w3-large" style="text-shadow:1px 1px 0 #444">Lorem ipsum dolor sit amet, consectetur
                 adipiscing elit.</p>
@@ -16,43 +16,14 @@
         </a>
     </div>
     <div class="w3-row-padding w3-margin-top" id="tricks">
-        {% for trick in tricks %}
-            <div class="w3-col w3-margin-bottom trick-list" id="trick">
-                <div class="w3-card">
-                    <img class="w3-image" src="images/tricks/ZYdken1.jpg">
-                    <div class="w3-container w3-padding">
-                        <a href="{{ path('trick_show', {'slug': trick.slug}) }}">{{ trick.title }}</a>
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                            <div class="w3-right">
-                                <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
-                                    <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
-                                </a>
-                                <a onclick="document.getElementById('{{ 'modal' ~ trick.id }}').style.display='block'"
-                                   style="cursor: pointer">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div id="{{ 'modal' ~ trick.id }}" class="w3-modal w3-animate-opacity">
-                {{ include('trick/_delete_form.html.twig') }}
-            </div>
-        {% else %}
-            <div class="w3-padding w3-margin"><p class="w3-border w3-light-grey w3-center">aucun trick pour le
-                    moment</p></div>
-        {% endfor %}
+        {{ include('home/trick.html.twig') }}
     </div>
     {% if tricks|length < nTricks %}
         <div class="w3-center w3-padding w3-margin" id="showMore" n="{{ nTricks }}">
             <button class="w3-btn w3-blue w3-center w3-round" onclick="showMoreTrick()">Afficher plus</button>
         </div>
     {% endif %}
-    <a id="arrowup" class="w3-right w3-hide myblue" onclick="scrollToTrick()">
+    <a id="arrowup" class="w3-right w3-hide myblue w3-padding" onclick="scrollToTrick()">
         <i class="fa fa-arrow-up w3-xxlarge" aria-hidden="true"></i>
     </a>
-    {% block javascripts %}
-        {{ parent() }}
-    {% endblock %}
 {% endblock %}

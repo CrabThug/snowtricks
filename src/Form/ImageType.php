@@ -23,14 +23,18 @@ class ImageType extends AbstractType
                 'label' => FALSE,
             ])
             ->add('bool', CheckboxType::class, [
-                'label'    => 'Image principale',
+                'label' => FALSE,
+                'attr' => [
+                    'style' => "w3-check",
+                    'type' => "checkbox"
+                ],
                 'required' => false,
             ])
             ->add('file', FileType::class, [
                 'label' => FALSE,
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '1024M',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/pjpeg',

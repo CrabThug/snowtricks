@@ -1,15 +1,21 @@
 {% for trick in tricks %}
-    <div class="w3-col w3-margin-bottom trick-list" id="trick">
-        <div class="w3-card">
-            <img class="w3-image" src="images/tricks/ZYdken1.jpg">
+    <div class="w3-col s12 w3-margin-bottom ntrick" id="trick">
+        <div class="gainsboro">
+            {#{% for image in trick.images %}
+                {% if image.bool == 1 %}
+                    <img class="w3-image" src="{{  asset(image_directory ~ image.name) }}" alt="imge">
+                {% endif %}
+            {% endfor %}#}
+            <img class="w3-image" src="{{  asset('images/tricks/ZYdken1.jpg') }}" alt="imge">
             <div class="w3-container w3-padding">
-                <a href="{{ relative_path('/trick/' ~ trick.slug) }}">{{ trick.title }}</a>
+                <a class="overflow-none break-word" style="max-width: 1px"
+                   href="{{ relative_path('/trick/' ~ trick.slug) }}">{{ trick.title }}</a>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <div class="w3-right">
-                        <a href="{{ relative_path('/modifier-trick/' ~ trick.slug) }}">
+                        <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
                             <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
                         </a>
-                        <a onclick="document.getElementById('{{ 'modal' ~ trick.id }}').style.display='block'"
+                        <a onclick="$('{{ '#modal' ~ trick.id }}').show()"
                            style="cursor: pointer">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
@@ -22,7 +28,7 @@
         {{ include('trick/_delete_form.html.twig') }}
     </div>
 {% else %}
-    <div class="w3-padding w3-margin"><p class="w3-border w3-light-grey w3-center">aucun trick pour le
+    <div class="w3-padding w3-margin"><p class="w3-padding w3-border w3-round w3-light-grey w3-center">aucun trick pour
+            le
             moment</p></div>
-
 {% endfor %}

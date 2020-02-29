@@ -23,3 +23,5 @@ yarn-error.log
 public/images/tricks/*
 public/uploads/images/*
 public/uploads/profilPicture/*
+###
+/tests/

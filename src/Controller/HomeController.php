@@ -30,7 +30,7 @@ class HomeController extends AbstractController
      * @param TrickRepository $trickRepository
      * @return Response
      */
-    public function showMoreTrick(TrickRepository $trickRepository, Request $request)
+    public function showMoreTrick(TrickRepository $trickRepository, Request $request): Response
     {
         $start = $request->request->get('start');
 
