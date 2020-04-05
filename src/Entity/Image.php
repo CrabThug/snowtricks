@@ -53,7 +53,7 @@ class Image
     /**
      * @param mixed $file
      */
-    public function setFile($file)
+    public function setFile($file) : void
     {
         $this->file = $file;
     }

@@ -1,0 +1,68 @@
+<div>
+    <div class="w3-row w3-section w3-hide-small" id="carousel">
+        {% if trick is defined %}
+        {% set media = 0 %}
+        {% for image in trick.images %}
+            {% set media = media + 1 %}
+            {# fixme carousel button +8 #}
+            <div class="w3-col l3 m4 s12 carouselItem padding-8" id="{{ media }}">
+                <img id="{{ 'image-' ~ image.id }}" class="w3-opacity w3-hover-opacity-off w3-image"
+                     src="{{ asset(image_directory ~ image.name) }}"
+                     alt="{{ image.alt }}">
+                {% if edit is defined %}
+                    <div class="w3-right">
+                        <a class="w3-button" id="{{ image.id }}" link="{{ path('image_main', {id:image.id}) }}"
+                           title="Definir comme image principale"
+                           token="{{ csrf_token('mainImg' ~ image.id) }}" onclick="mainImg(this)">
+                            <i class="fa fa-map-pin" aria-hidden="true"></i>
+                        </a>
+                        <a class="w3-button" href="{{ path('image_edit', {'id' : image.id }) }}">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </a>
+                        <a class="w3-button" onclick="$('#modalDeleteImage{{ image.id }}').show()">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="w3-modal" id="modalDeleteImage{{ image.id }}">
+                        {{ include('image/_delete_form.html.twig', {type:'ajax'}) }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% for movie in trick.movies %}
+            {% if movie.id|length %}
+                {% set media = media + 1 %}
+                <div id="{{ media }}" class="w3-col l3 m4 s12 carouselItem iframe-container w3-display-container">
+                    <iframe class="w3-opacity w3-hover-opacity-off" src="{{ movie.embed }}"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen {% if edit is defined %}style="height: calc(100% - 38px);"{% endif %}>
+                    </iframe>
+                    {% if edit is defined %}
+                        <div class="w3-display-bottomright padding-8">
+                            <a class="w3-button" href="{{ path('movie_edit', {'id' : movie.id }) }}">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                            <a class="w3-button" onclick="$('#modalDeleteMovie{{ movie.id }}').show()">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <div class="w3-modal" id="modalDeleteMovie{{ movie.id }}">
+                            {{ include('movie/_delete_form.html.twig', {type:'ajax'}) }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% if trick.images|length + trick.movies|length > 4 %}
+        <div class="w3-padding w3-hide-small" id="mediaSlide" n="{{ trick.images|length + trick.movies|length }}">
+            <div class="w3-left w3-button w3-blue w3-round carouselBtn w3-disabled" id="slideP" v="-1">{% trans %}Previous{% endtrans %}
+            </div>
+            <div class="w3-right w3-button w3-blue w3-round carouselBtn" id="slideN" v="1">{% trans %}Next{% endtrans %}</div>
+        </div>
+    {% endif %}
+    {% endif %}
+    <div class="w3-center w3-padding">
+    <button class="w3-hide-large w3-hide-medium w3-button w3-blue w3-round" id="carouselToogle" onclick="carouselbtnToogle()">{% trans %}Show pictures{% endtrans %}</button>
+    </div>
+</div>

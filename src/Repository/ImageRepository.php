@@ -11,6 +11,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method Image|null findOneBy(array $criteria, array $orderBy = null)
  * @method Image[]    findAll()
  * @method Image[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method findByBool(bool $TRUE)
  */
 class ImageRepository extends ServiceEntityRepository
 {

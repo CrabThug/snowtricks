@@ -4,8 +4,10 @@ namespace App\Form;
 
 use App\Entity\Image;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,23 +20,34 @@ class ImageType extends AbstractType
         $builder
             ->add('alt', TextType::class, [
                 'attr' => [
-                    'placeholder' => "Nom alternatif",
+                    'class' => "w3-padding",
+                    'placeholder' => "Alternatif name",
                 ],
                 'label' => FALSE,
+                'error_bubbling' => TRUE,
             ])
             ->add('bool', CheckboxType::class, [
-                'label' => FALSE,
+                'label' => 'Main picture',
+                'error_bubbling' => TRUE,
                 'attr' => [
-                    'style' => "w3-check",
-                    'type' => "checkbox"
+                    'onclick' => "check(this)",
+                    'style' => "margin: 0 8px 16px 16px ;",
+                    'class' => "w3-check",
+                    'type' => "checkbox",
                 ],
-                'required' => false,
+                'required' => FALSE
             ])
             ->add('file', FileType::class, [
                 'label' => FALSE,
+                'required' => FALSE,
+                'error_bubbling' => TRUE,
+                'attr' => [
+                    'style' => "w3-center w3-blue w3-button",
+                    'onchange' => 'mainShow(this)'
+                ],
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024M',
+                        'maxSize' => '4096M',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/pjpeg',

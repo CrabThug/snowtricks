@@ -6,6 +6,12 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+.idea
+public/images/tricks/*
+public/uploads/images/*
+public/uploads/profilPicture/*
+###
+/tests/
 
 ###> symfony/phpunit-bridge ###
 .phpunit
@@ -13,14 +19,14 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
+/.idea
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
+/public/build/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
-.idea
-public/images/tricks/*
-public/uploads/images/*
-public/uploads/profilPicture/*
-###
-/tests/
+/assets/*
+
+!/.idea
+/.idea/

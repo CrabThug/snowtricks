@@ -4,14 +4,14 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class CategoryFixtures extends Fixture
 {
     /**
      * Undocumented function
      *
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     * @param ObjectManager $manager
      *
      * @return void
      */
@@ -20,9 +20,9 @@ class CategoryFixtures extends Fixture
     {
         $categoryName = ['Grabs', 'Rotations', 'Flips', 'Rotations désaxées', 'Slides', 'One foot', 'Old school'];
 
-        for ($i = 0; $i < \count($categoryName); $i++) {
+        foreach ($categoryName as $i => $iValue) {
             $category = new Category();
-            $category->setName($categoryName[$i]);
+            $category->setName($iValue);
             $manager->persist($category);
 
             $this->addReference('category-' . $i, $category);

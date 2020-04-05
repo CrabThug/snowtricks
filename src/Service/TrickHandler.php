@@ -10,13 +10,16 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class TrickHandler
 {
-    private $fileUploader;
-    private $entityManager;
+    private $imageHandler;
+    private $movieHandler;
+    private $em;
+    private $slugger;
 
-    public function __construct(FileUploader $fileUploader, EntityManagerInterface $entityManager, SluggerInterface $slugger)
+    public function __construct(ImageHandler $imageHandler, MovieHandler $movieHandler, EntityManagerInterface $em, SluggerInterface $slugger)
     {
-        $this->fileUploader = $fileUploader;
-        $this->entityManager = $entityManager;
+        $this->imageHandler = $imageHandler;
+        $this->movieHandler = $movieHandler;
+        $this->em = $em;
         $this->slugger = $slugger;
     }
 
@@ -24,14 +27,17 @@ class TrickHandler
     {
         foreach ($trick->getImages() as $image) {
             if (!$image->getId()) {
-                $filename = $this->fileUploader->upload($image->getFile());
-                $image->setName($filename);
-                $image->setTrick($trick);
+                $this->imageHandler->handle($image, $trick);
+            }
+        }
+        foreach ($trick->getMovies() as $movie) {
+            if (!$movie->getId()) {
+                $this->movieHandler->handle($movie, $trick);
             }
         }
         $trick->setSlug($this->slugger->slug($trick->getTitle())->lower());
 
-        $this->entityManager->persist($trick);
-        $this->entityManager->flush();
+        $this->em->persist($trick);
+        $this->em->flush();
     }
 }

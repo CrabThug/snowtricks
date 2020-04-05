@@ -1,29 +1,24 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}{% endblock %}
-
 {% block body %}
-
     <div id="intro" class="w3-display-container">
         <img src="{{ asset('images/wallp.jpg') }}" alt="Lights" class="w3-image">
         <div class="w3-center w3-display-middle">
-            <p class="w3-normal w3-large" style="text-shadow:1px 1px 0 #444">Lorem ipsum dolor sit amet, consectetur
+            <p class="w3-normal w3-large shadow-black">Lorem ipsum dolor sit amet, consectetur
                 adipiscing elit.</p>
         </div>
-        <a id="arrow" class="w3-display-bottomright myblue w3-padding-64" style="margin-right:45px;"
-           onclick="scrollToTrick()">
+        <a id="arrowDown" class="w3-right" onclick="scrollToTrick()">
             <i class="fa fa-arrow-down w3-xxlarge" aria-hidden="true"></i>
         </a>
     </div>
-    <div class="w3-row-padding w3-margin-top" id="tricks">
+    <div class="w3-row-padding" id="tricks">
         {{ include('home/trick.html.twig') }}
     </div>
     {% if tricks|length < nTricks %}
-        <div class="w3-center w3-padding w3-margin" id="showMore" n="{{ nTricks }}">
-            <button class="w3-btn w3-blue w3-center w3-round" onclick="showMoreTrick()">Afficher plus</button>
+        <div class="w3-center w3-padding w3-margin" id="showMore" onclick="showMoreTrick({{ nTricks }})">
+            <button class="w3-btn w3-blue w3-center w3-round">Afficher plus</button>
         </div>
     {% endif %}
-    <a id="arrowup" class="w3-right w3-hide myblue w3-padding" onclick="scrollToTrick()">
+    <a id="arrowUp" class="w3-right w3-hide" onclick="scrollToTrick()">
         <i class="fa fa-arrow-up w3-xxlarge" aria-hidden="true"></i>
     </a>
 {% endblock %}

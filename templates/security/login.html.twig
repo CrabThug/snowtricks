@@ -1,53 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}{% trans %}Log in!{% endtrans %}{% endblock %}
 
 {% block body %}
-    <div class="w3-light-gray w3-center w3-padding-64">
-        <form method="post" class="w3-padding-64 w3-white w3-round" style="max-width: 600px; margin: auto">
-            {% if error %}
-                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-            {% endif %}
+    <div class="w3-light-gray w3-padding-64 w3-center">
+        <div class="w3-padding-64 w3-white w3-round  w3-display-container" style="max-width: 600px; margin: auto">
+            <form method="post">
+                {% if error %}
+                    <div class="w3-pale-red w3-panel w3-round w3-margin">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
 
-            {% if app.user %}
-                <div class="mb-3">
-                    You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-                </div>
-            {% endif %}
-
-            <h1 class="">Please sign in</h1>
-            <div>
+                {% if app.user %}
+                    <div class="mb-3 w3-pale-blue w3-panel w3-round w3-margin">
+                        {% trans %}You are logged in as {% endtrans %}{{ app.user.username }}, <a href="{{ path('app_logout') }}">{% trans %}Logout{% endtrans %}</a>
+                    </div>
+                {% endif %}
+                <h1>{% trans %}Please sign in{% endtrans %}</h1>
                 <div class="w3-margin">
-                    <label for="inputEmail">Email</label>
+                    <label for="inputEmail" class="w3-block">{% trans %}Email{% endtrans %}</label>
                     <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
-                           class="w3-round w3-border"
+                           class="w3-round w3-border w3-center"
                            required
                            autofocus>
                 </div>
                 <div class="w3-margin">
-                    <label for="inputPassword">Password</label>
-                    <input type="password" name="password" id="inputPassword" class="w3-round w3-border" required>
+                    <label for="inputPassword" class="w3-block">{% trans %}Password{% endtrans %}</label>
+                    <input type="password" name="password" id="inputPassword" class="w3-round w3-border w3-center"
+                           required>
                 </div>
+
                 <input type="hidden" name="_csrf_token"
                        value="{{ csrf_token('authenticate') }}"
                 >
-
-                {#
-                    Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                    See https://symfony.com/doc/current/security/remember_me.html
-
-                    <div class="checkbox mb-3">
-                        <label>
-                            <input type="checkbox" name="_remember_me"> Remember me
-                        </label>
-                    </div>
-                #}
-
                 <button class="w3-button w3-blue w3-margin" type="submit">
-                    Sign in
+                    Se connecter
                 </button>
+            </form>
+            <div class="w3-padding">
+                <a class="w3-padding w3-display-bottomleft" href="{{ path('ask_password_reset') }}">Mot de passe oublié
+                    ?</a>
+                <a class="w3-padding w3-display-bottomright" href="{{ path('app_register') }}">Nous rejoindre</a>
             </div>
-        </form>
+        </div>
     </div>
 {% endblock %}
 {% block footer %}{% endblock footer %}

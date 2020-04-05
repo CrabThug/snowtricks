@@ -18,8 +18,6 @@ class Movie
     private $id;
 
     /**
-     * @Assert\Url()
-     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255)
      */
     private $embed;

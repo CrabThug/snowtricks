@@ -1,116 +1,42 @@
-<div class="w3-display-container div-image w3-border-bottom w3-gray">
-    {% if trick is defined %}
-        {% for image in trick.images %}
-            {% if image.bool == 1 %}
-                <img id="cover" class="image"
-                     src="{{ asset(image_directory ~ image.name) }}"
-                     alt="{{ image.alt }}">
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        <img id="cover" class="image w3-hide" src="" alt="cover">
-    {% endif %}
-</div>
+<div id="page">
+    {% include 'trick/__header.html.twig' with {'edit': true} %}
 
-<div>
-    <div class="w3-row-padding w3-section" id="carousel">
-        {% set media = 0 %}
-        {% for image in trick.images %}
-            {% set media = media + 1 %}
-            <div class="w3-col m4 s6 carouselItem padding-8" id="{{ media }}">
-                <img class="w3-opacity w3-hover-opacity-off w3-image"
-                     src="{{ asset(image_directory ~ image.name) }}"
-                     alt="{{ image.alt }}">
-                <div class="w3-right">
-                    <a class="w3-button" href="{{ path('image_edit', {'id' : image.id }) }}">
-                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                    </a>
-                    <a class="w3-button" onclick="$('#modalDeleteImage{{ image.id }}').show()">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="w3-modal" id="modalDeleteImage{{ image.id }}">
-                {{ include('image/_delete_form.html.twig') }}
-            </div>
-        {% endfor %}
-        {% for movie in trick.movies %}
-            {% set media = media + 1 %}
-            <div class="w3-col m4 s6 carouselItem padding-8 " id="{{ media }}">
-                <div>
-                    <div class="iframe-container">
-                        <iframe type="video/webm" src="{{ movie.embed }}"
-                                class="w3-opacity w3-hover-opacity-off"
-                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
-                        </iframe>
-                    </div>
-                    <div class="w3-right">
-                        <a class="w3-button" href="{{ path('movie_edit', {'id' : movie.id }) }}">
-                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                        </a>
-                        <a class="w3-button" onclick="$('#modalDelMov').show()">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    {% if trick.images|length + trick.movies|length > 4 %}
-        <div class="w3-padding" id="mediaSlide" n="{{ trick.images|length + trick.movies|length }}">
-            <div class="w3-left w3-button w3-blue w3-round carouselBtn w3-disabled" id="slideP" v="-1">Precedent
-            </div>
-            <div class="w3-right w3-button w3-blue w3-round carouselBtn" id="slideN" v="1">Suivant</div>
-        </div>
-    {% endif %}
-</div>
+    {% include 'trick/__carousel.html.twig' with {'edit': true} %}
 
-
-<div>
     {{ form_start(form) }}
 
 
-    {% if form_errors(form.images) %}
-        <div class="w3-panel w3-pale-red w3-border w3-border-red">
-            {{ form_errors(form.images) }}
-        </div>
-    {% endif %}
-    {% if form_errors(form.movies) %}
-        <div class="w3-panel w3-pale-red w3-border w3-border-red">
-            {{ form_errors(form.movies) }}
+    {% if form_errors(form) %}
+        <div class="w3-panel w3-pale-red w3-col s12 m4 w3-margin">
+            {{ form_errors(form) }}
         </div>
     {% endif %}
 
     <div class="w3-row">
-        <a class="w3-button w3-blue w3-round w3-margin add_image_link" onclick="">Ajouter une image</a>
-        <a class="w3-button w3-blue w3-round w3-margin add_movie_link" onclick="">Ajouter une video</a>
+        <a class="w3-button w3-blue w3-round w3-margin add_image_link"
+           onclick="">{% trans %}Add a picture{% endtrans %}</a>
+        <a class="w3-button w3-blue w3-round w3-margin add_movie_link"
+           onclick="">{% trans %}Add a movie{% endtrans %}</a>
     </div>
-
 
     <div class="w3-row-padding">
-
-        <div class="w3-col l6 m12 w3-block">
-            <div class="images w3-row" data-value="{{ form.images.children|length }}"
-                 data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"
-                 id="trick_images">
-            </div>
-            {% do form.images.setRendered %}
+        <div class="images"
+             data-index="{{ form.images.children|length }}"
+             data-value="{% if trick is defined %}{{ trick.images|length }}{% endif %}"
+             data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"
+             id="trick_images">
         </div>
-
-        <div class="w3-col l6 m12 w3-block">
-            <div class="movies w3-row"
-                data-prototype="{{ form_widget(form.movies.vars.prototype)|e('html_attr') }}"
-                id="trick_movies">
-            </div>
+        <div class="movies"
+             data-index="{{ form.movies.children|length }}"
+             data-value="{% if trick is defined %}{{ trick.movies|length }}{% endif %}"
+             data-prototype="{{ form_widget(form.movies.vars.prototype)|e('html_attr') }}"
+             id="trick_movies">
         </div>
-
     </div>
-
-    <div class="m-a" style="width:60%;">
+    <div style="overflow: hidden">
         <div class="w3-margin">
             {% if form_errors(form.title) %}
-                <div class="w3-panel w3-pale-red w3-border w3-border-red">
+                <div class="w3-panel w3-pale-red">
                     {{ form_errors(form.title) }}
                 </div>
             {% endif %}
@@ -118,7 +44,7 @@
         </div>
         <div class="w3-margin">
             {% if form_errors(form.description) %}
-                <div class="w3-panel w3-pale-red w3-border w3-border-red">
+                <div class="w3-panel w3-pale-red">
                     {{ form_errors(form.description) }}
                 </div>
             {% endif %}
@@ -126,7 +52,7 @@
         </div>
         <div class="w3-margin">
             {% if form_errors(form.description) %}
-                <div class="w3-panel w3-pale-red w3-border w3-border-red">
+                <div class="w3-panel w3-pale-red">
                     {{ form_errors(form.category) }}
                 </div>
             {% endif %}
@@ -134,9 +60,17 @@
         </div>
         <div class="w3-margin w3-right">
             {{ form_widget(form.submit) }}
+            {% if trick is defined %}
+                <a class="w3-button w3-red w3-round"
+                   onclick="$('#modalDelete{{ trick.id }}').show()">{% trans %}Delete{% endtrans %}</a>
+            {% endif %}
         </div>
     </div>
-
     {{ form_row(form._token) }}
     {{ form_end(form, {'render_rest' : false}) }}
+    {% if trick is defined %}
+        <div id="modalDelete{{ trick.id }}" class="w3-modal w3-animate-opacity">
+            {{ include('trick/_delete_form.html.twig', {type:'form'}) }}
+        </div>
+    {% endif %}
 </div>

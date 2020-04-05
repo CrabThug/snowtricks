@@ -21,7 +21,8 @@ class TrickType extends AbstractType
             ->add('title', TextType::class, [
                 'attr' => [
                     'placeholder' => 'Choose a title',
-                    'class' => "w3-padding",
+                    'class' => "w3-padding w3-border",
+                    'onkeyup' => "titleTag(this)",
                 ],
                 'label' => FALSE,
             ])
@@ -35,7 +36,7 @@ class TrickType extends AbstractType
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
-                'attr' => ['class' => 'w3-select'],
+                'attr' => ['class' => 'w3-select w3-border'],
                 'label' => FALSE,
             ])
             ->add('images', CollectionType::class, [

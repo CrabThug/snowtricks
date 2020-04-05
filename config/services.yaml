@@ -7,6 +7,7 @@ parameters:
     image_directory: '%kernel.project_dir%/public/uploads/images/'
     profilPicture: '%kernel.project_dir%/public/uploads/profilPicture/'
 
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -30,3 +31,7 @@ services:
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%image_directory%'
+
+    App\Service\Mail:
+        arguments:
+            $from: 'damien_millet@icloud.com'

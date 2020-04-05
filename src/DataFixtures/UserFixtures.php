@@ -14,7 +14,7 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $users = [
-            ['admin', 'user.jpeg'],
+            ['admin', 'user.jpg'],
             ['toto', 'guest.jpg'],
             ['tata', 'usertile10.jpg'],
             ['titi', 'usertile11.jpg'],

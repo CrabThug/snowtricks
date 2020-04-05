@@ -3,22 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Entity\Image;
-use App\Entity\Movie;
 use App\Entity\Trick;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
-use App\Repository\ImageRepository;
-use App\Service\FileUploader;
+use App\Service\CommentHandler;
 use App\Service\TrickHandler;
-use App\Service\UrlExtract;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/trick")
@@ -28,13 +22,10 @@ class TrickController extends BaseController
     /**
      * @Route("/new", name="trick_new", methods={"GET","POST"})
      * @param Request $request
-     * @param FileUploader $fileUploader
-     * @param UrlExtract $urlExtract
-     * @param SluggerInterface $slugger
-     * @param $imageRepository
+     * @param TrickHandler $trickHandler
      * @return Response
      */
-    public function new(Request $request, FileUploader $fileUploader, UrlExtract $urlExtract, SluggerInterface $slugger): Response
+    public function new(Request $request, TrickHandler $trickHandler): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $trick = new Trick();
@@ -42,91 +33,14 @@ class TrickController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Image $image */
-            foreach ($trick->getImages() as $image) {
-                if (!$image->getId()) {
-                    $imageName = $fileUploader->upload($image->getFile());
-
-                    if (!$image->findOneBy(['bool' => 1])) {
-                        $image->setBool(TRUE);
-                    }
-                    $image->setName($imageName);
-                    $image->setTrick($trick);
-                }
-            }
-            /** @var Movie $movie */
-            foreach ($trick->getMovies() as $movie) {
-                if (!$movie->getId()) {
-                    $movie->setTrick($trick);
-                    $movieEmbed = $urlExtract->extract($movie->getEmbed());
-                    $movie->setEmbed($movieEmbed);
-                }
-            }
-            $trick->setSlug($slugger->slug($trick->getTitle())->lower());
-            $this->entityManager->persist($trick);
-            $this->entityManager->flush();
+            $trickHandler->handle($trick);
 
             return $this->redirectToRoute('trick_show', [
                 'slug' => $trick->getSlug()
             ]);
         }
 
-        return $this->render('trick/new.html.twig', ['form' => $form->createView(),
-            'trick' => $trick]);
-    }
-
-    /**
-     * @Route("/{slug}", name="trick_show", methods={"GET","POST"})
-     * @param Request $request
-     * @param Trick $trick
-     * @param EntityManagerInterface $entityManager
-     * @param CommentRepository $commentRepository
-     * @return Response
-     */
-    public
-    function show(Request $request, Trick $trick, EntityManagerInterface $entityManager, CommentRepository $commentRepository): Response
-    {
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $user */
-            $user = $this->getUser();
-            $comment->setTrick($trick);
-            $comment->setUser($user);
-            $entityManager->persist($comment);
-            $entityManager->flush();
-            return $this->redirectToRoute('trick_show', [
-                'slug' => $trick->getSlug()
-            ]);
-        }
-        $comment = $commentRepository->findBy(['trick' => $trick], ['creation' => 'desc'], 10);
-
-        return $this->render('trick/show.html.twig', [
-            'trick' => $trick,
-            'form' => $form->createView(),
-            'comment' => $comment,
-            'user' => $this->getUser(),
-            'nComment' => $commentRepository->count(['trick' => $trick])
-        ]);
-    }
-
-    /**
-     * @Route("/{slug}/pagination", name="trick_comment_pagination", methods={"POST"})
-     * @param Request $request
-     * @param Trick $trick
-     * @param CommentRepository $commentRepository
-     * @return Response
-     */
-    public
-    function pagination(Request $request, Trick $trick, CommentRepository $commentRepository)
-    {
-        $start = $request->request->get('start');
-
-        return $this->render('trick/_pagination.html.twig', [
-            'comment' => $commentRepository->findBy(['trick' => $trick], ['creation' => 'desc'], 10, $start),
-        ]);
+        return $this->render('trick/new.html.twig', ['form' => $form->createView()]);
     }
 
     /**
@@ -143,16 +57,9 @@ class TrickController extends BaseController
 
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $trickHandler->handle($trick);
-            /*/** @var Movie $movie */
-            /*foreach ($trick->getMovies() as $movie) {
-                if (!$movie->getId()) {
-                    $movie->setTrick($trick);
-                    $movieEmbed = $urlExtract->extract($movie->getEmbed());
-                    $movie->setEmbed($movieEmbed);
-                    $this->entityManager->persist($movie);
-                }*/
 
             return $this->redirectToRoute('trick_show', [
                 'slug' => $trick->getSlug()
@@ -166,7 +73,57 @@ class TrickController extends BaseController
     }
 
     /**
-     * @Route("/{slug}", name="trick_delete", methods={"DELETE"})
+     * @Route("/{slug}", name="trick_show", methods={"GET","POST"})
+     * @param Request $request
+     * @param Trick $trick
+     * @param CommentHandler $commentHandler
+     * @param CommentRepository $commentRepository
+     * @return Response
+     */
+    public function show(Request $request, Trick $trick, CommentHandler $commentHandler, CommentRepository $commentRepository): Response
+    {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $this->getUser();
+            $commentHandler->handle($comment, $trick, $user);
+
+            return $this->redirectToRoute('trick_show', [
+                'slug' => $trick->getSlug()
+            ]);
+        }
+
+        return $this->render('trick/show.html.twig', [
+            'trick' => $trick,
+            'form' => $form->createView(),
+            'comment' => $commentRepository->findBy(['trick' => $trick], ['creation' => 'desc'], 10),
+            'user' => $this->getUser(),
+            'nComment' => $commentRepository->count(['trick' => $trick])
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}/pagination", name="trick_comment_pagination", methods={"POST"})
+     * @param Request $request
+     * @param Trick $trick
+     * @param CommentRepository $commentRepository
+     * @return Response
+     */
+    public
+    function pagination(Request $request, Trick $trick, CommentRepository $commentRepository): Response
+    {
+        $start = $request->request->get('start');
+
+        return $this->render('trick/_pagination.html.twig', [
+            'comment' => $commentRepository->findBy(['trick' => $trick], ['creation' => 'desc'], 10, $start),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="trick_delete", methods={"DELETE"})
      * @param Request $request
      * @param Trick $trick
      * @return Response
@@ -174,46 +131,20 @@ class TrickController extends BaseController
     public
     function delete(Request $request, Trick $trick): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-        if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($trick);
-            $this->entityManager->flush();
-        }
-        return $this->redirectToRoute('home');
-    }
+        try {
+            $this->denyAccessUnlessGranted('ROLE_USER');
+            if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
+                $this->entityManager->remove($trick);
+                $this->entityManager->flush();
 
-    /**
-     * @Route("image-delete/{id}", name="image_delete", methods={"DELETE"})
-     * @param Request $request
-     * @param Image $image
-     * @return Response
-     */
-    public
-    function deleteImage(Request $request, Image $image): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-        if ($this->isCsrfTokenValid('delete' . $image->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($image);
-            $this->entityManager->flush();
+                $this->addFlash('success', 'Le trick a bien ete supprimé');
+            }
+        } catch (\Exception $exception) {
+            $this->addFlash('success', 'Le trick n\'a pas pu etre supprimé');
         }
-        return $this->redirectToRoute('home');
-    }
-
-    /**
-     * @Route("movie-delete/{id}", name="movie_delete", methods={"DELETE"})
-     * @param Request $request
-     * @param Movie $movie
-     * @return Response
-     */
-    public
-    function deleteMovie(Request $request, Movie $movie): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-        if ($this->isCsrfTokenValid('delete' . $movie->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($movie);
-            $this->entityManager->flush();
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('flash.html.twig');
         }
-
         return $this->redirectToRoute('home');
     }
 }

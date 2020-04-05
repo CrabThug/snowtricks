@@ -1,65 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% endblock %}
-
 {% block body %}
-    <div class="w3-display-container div-image w3-gray">
-        {% for image in trick.images %}
-            {% if image.bool == 1 %}
-                <img id="{{ image.id }}" class="image"
-                     src="{{ asset(image_directory ~ image.name) }}"
-                     alt="{{ image.alt }}">
-            {% endif %}
-        {% endfor %}
-        <tag class="w3-display-middle w3-text-white w3-black w3-tag w3-round padding-lr w3-xxlarge">
-            {{ trick.title|capitalize }}
-        </tag>
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <div class="w3-display-topright w3-blue">
-                <a class="w3-button" href="{{ path('trick_edit', {'slug' : trick.slug }) }}">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                </a>
-                <a class="w3-button" onclick="$('#modal').show()">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </a>
-            </div>
-            <div id="modal" class="w3-modal w3-animate-opacity">
-                {{ include('trick/_delete_form.html.twig') }}
-            </div>
-        {% endif %}
-    </div>
 
-    <div>
-        <div class="w3-row-padding w3-section" id="carousel">
-            {% set media = 0 %}
-            {% for image in trick.images %}
-                {% set media = media + 1 %}
-                <div class="w3-col m4 s6 carouselItem padding-8" id="{{ media }}">
-                    <img class="w3-opacity w3-hover-opacity-off w3-image"
-                         src="{{ asset(image_directory ~ image.name) }}"
-                         alt="{{ image.alt }}">
-                </div>
-            {% endfor %}
-            {% for movie in trick.movies %}
-                {% set media = media + 1 %}
-                <div class="w3-col m4 s6 carouselItem padding-8" id="{{ media }}">
-                    <div class="video-container w3-opacity w3-hover-opacity-off w3-image">
-                        <iframe src="{{ movie.embed }}"
-                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
-                        </iframe>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        {% if trick.images|length + trick.movies|length > 4 %}
-            <div class="w3-padding" id="mediaSlide" n="{{ trick.images|length + trick.movies|length }}">
-                <div class="w3-left w3-button w3-blue w3-round carouselBtn w3-disabled" id="slideP" v="-1">Precedent
-                </div>
-                <div class="w3-right w3-button w3-blue w3-round carouselBtn" id="slideN" v="1">Suivant</div>
-            </div>
-        {% endif %}
-    </div>
+    {% include 'trick/__header.html.twig' with {'show': true} %}
+
+    {% include 'trick/__carousel.html.twig' with {'show': true} %}
 
     <div class="w3-container">
         <p id="description" class="w3-center">{{ trick.description|capitalize }}</p>
@@ -82,13 +27,14 @@
                     {{ form_widget(form.content) }}
                 </div>
                 <div class="w3-col s12 m4">
-                    <button class="w3-btn w3-blue w3-large">Laisser un commentaire</button>
+                    <button class="w3-btn w3-blue w3-large">{% trans %}Comment{% endtrans %}</button>
                 </div>
             </div>
             {{ form_end(form) }}
         {% else %}
             <div style="max-width:500px;margin:auto;">
-                <p class="w3-center w3-light-grey w3-padding">Connectez vous pour pouvoir rediger un commentaire.</p>
+                <p class="w3-center w3-light-grey w3-padding"><a class="underline" href="{{ path('app_login') }}">Connectez
+                        vous</a> pour pouvoir rediger un commentaire.</p>
             </div>
         {% endif %}
         <hr>
@@ -101,7 +47,7 @@
                         <div style="height: 3.8vh">
                             <img alt="profil_picture" class="thumb" src="{{ asset(profilPicture ~ c.user.picture) }}">
                         </div>
-                        <span class="w3-center">{{ c.user.name }}</span>
+                        <span class="w3-center w3-text-white">{{ c.user.name }}</span>
                     </div>
                     <div class="w3-col s10 w3-light-gray w3-padding break-word">
                         <span>le <c class="w3-text-blue">{{ c.creation|date("d/m/Y") }}</c> :</span>

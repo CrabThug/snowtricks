@@ -19,11 +19,7 @@ class CommentType extends AbstractType
                     'class' => 'w3-input w3-border',
                     'style' => 'min-height: 43px;height: 43px;max-width:306px;min-width:306px'
                 ]
-            ])/*->add('Commenter', SubmitType::class, [
-                'attr' => [
-                    'class' => 'w3-btn w3-blue w3-large',
-                ]
-            ])*/
+            ])
         ;
     }
 

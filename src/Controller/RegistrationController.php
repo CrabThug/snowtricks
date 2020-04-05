@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\LoginFormAuthenticator;
+use App\Service\FileUploader;
+use App\Service\Mail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,8 +17,16 @@ class RegistrationController extends BaseController
 {
     /**
      * @Route("/register", name="app_register")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param GuardAuthenticatorHandler $guardHandler
+     * @param LoginFormAuthenticator $authenticator
+     * @param FileUploader $fileUploader
+     * @param Mail $mail
+     * @return Response
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator, FileUploader $fileUploader, Mail $mail): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -30,19 +40,18 @@ class RegistrationController extends BaseController
                     $form->get('plainPassword')->getData()
                 )
             );
-            $user->setPicture('empty');
+            $pictureName = $fileUploader
+                ->setTargetDirectory($this->getParameter('profilPicture'))
+                ->upload($user->getFile());
+            $user->setPicture($pictureName);
 
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             // do anything else you need here, like send an email
+            $mail->sendNewAccountEmail($user);
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('registration/register.html.twig', [

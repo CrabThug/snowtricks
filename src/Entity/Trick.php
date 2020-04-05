@@ -42,12 +42,12 @@ class Trick
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Image", cascade={"persist"}, mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Image",cascade={"persist","remove"}, mappedBy="trick")
      */
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Movie",cascade={"persist"}, mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Movie",cascade={"persist","remove"}, mappedBy="trick")
      */
     private $movies;
 
@@ -232,6 +232,9 @@ class Trick
         return $this->updated;
     }
 
+    /**
+     * @ORM\PrePersist
+     */
     public function setUpdated(): self
     {
         $this->updated = new \DateTime();

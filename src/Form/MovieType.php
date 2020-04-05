@@ -16,23 +16,26 @@ class MovieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('embed', TextType::class, [
+            ->add('alt', TextType::class, [
+                'attr' => [
+                    'style' => "margin-bottom : 8px",
+                    'class' => "w3-padding",
+                    'placeholder' => "Alternatif name",
+                ],
+                'error_bubbling' => TRUE,
+                'label' => FALSE,
+            ])
+            ->add('embed', TextareaType::class, [
                 'label' => FALSE,
                 'attr' => [
                     'placeholder' => "Embed Video",
-                    'class' => "",
-                    'style' => "min-width:250px",
+                    'class' => "w3-border w3-padding",
+                    'style' => "min-width:382;max-width:382;width:382;height:58px;min-height:58px",
                 ],
+                'error_bubbling' => TRUE,
                 'constraints' => [
                     new Url()
                 ],
-            ])
-            ->add('alt', TextType::class, [
-                'attr' => [
-                    'class' => "",
-                    'placeholder' => "Nom Alternatif",
-                ],
-                'label' => FALSE,
             ]);
     }
 

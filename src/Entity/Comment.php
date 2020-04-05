@@ -51,7 +51,7 @@ class Comment
     /**
      * @ORM\PrePersist
      */
-    public function setCreation()
+    public function setCreation(): self
     {
         $this->creation = new \DateTime();
 

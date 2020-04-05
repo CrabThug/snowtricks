@@ -4,12 +4,11 @@
 namespace App\Controller;
 
 use App\Repository\TrickRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HomeController extends AbstractController
+class HomeController extends BaseController
 {
     /**
      * @Route("/", name="home")
@@ -20,14 +19,15 @@ class HomeController extends AbstractController
     {
         return $this->render('home/index.html.twig', [
             'tricks' => $trickRepository->findBy([], ['created' => 'desc'], 15, 0),
-            'nTricks' => $trickRepository->count([])
+            'nTricks' => $trickRepository->count([]),
+            'fr_FR'
         ]);
     }
 
     /**
      * @Route("/show-more-trick", name="showMoreTrick")
-     * @param $start
      * @param TrickRepository $trickRepository
+     * @param Request $request
      * @return Response
      */
     public function showMoreTrick(TrickRepository $trickRepository, Request $request): Response

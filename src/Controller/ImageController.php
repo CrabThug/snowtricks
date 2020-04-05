@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Image;
+use App\Entity\Trick;
 use App\Form\ImageType;
 use App\Repository\ImageRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\ImageHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,82 +14,84 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/image")
  */
-class ImageController extends AbstractController
+class ImageController extends BaseController
 {
     /**
-     * @Route("/", name="image_index", methods={"GET"})
-     */
-    public function index(ImageRepository $imageRepository): Response
-    {
-        return $this->render('image/index.html.twig', [
-            'images' => $imageRepository->findAll(),
-        ]);
-    }
-
-    /**
-     * @Route("/new", name="image_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $image = new Image();
-        $form = $this->createForm(ImageType::class, $image);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($image);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('image_index');
-        }
-
-        return $this->render('image/new.html.twig', [
-            'image' => $image,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="image_show", methods={"GET"})
-     */
-    public function show(Image $image): Response
-    {
-        return $this->render('image/show.html.twig', [
-            'image' => $image,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="image_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Image $image
+     * @param ImageHandler $imageHandler
+     * @return Response
      */
-    public function edit(Request $request, Image $image): Response
+    public function edit(Request $request, Image $image, ImageHandler $imageHandler): Response
     {
+
         $form = $this->createForm(ImageType::class, $image);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('image_index');
+            $imageHandler->handle($image, $image->getTrick());
+            return $this->redirectToRoute('trick_show', ['slug' => $image->getTrick()->getSlug()]);
         }
 
         return $this->render('image/edit.html.twig', [
             'image' => $image,
             'form' => $form->createView(),
         ]);
+
     }
 
     /**
-     * @Route("/{id}", name="image_delete", methods={"DELETE"})
+     * @Route("/{id}/main", name="image_main", methods={"POST"})
+     * @param Request $request
+     * @param Image $image
+     * @param ImageHandler $imageHandler
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function delete(Request $request, Image $image): Response
+    public function main(Request $request, Image $image, ImageHandler $imageHandler)
     {
-        if ($this->isCsrfTokenValid('delete'.$image->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($image);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('mainImg' . $image->getId(), $request->request->get('_token'))) {
+            $image->setBool(TRUE);
+            $imageHandler->handle($image, $image->getTrick());
+            if ($request->isXmlHttpRequest()) {
+                return $this->render('flash.html.twig');
+            }
         }
+        $this->addFlash('error', 'la page demandé ne semble pas exister.');
+        return $this->redirectToRoute('home');
+    }
 
-        return $this->redirectToRoute('image_index');
+    /**
+     * @Route("/{id}", name="image_delete", methods={"DELETE", "GET"})
+     * @param Request $request
+     * @param Image $image
+     * @param ImageRepository $imageRepository
+     * @return Response
+     */
+    public
+    function delete(Request $request, Image $image, ImageRepository $imageRepository)
+    {
+        if ($this->isCsrfTokenValid('delete' . $image->getId(), $request->request->get('_token'))) {
+            if ($imageRepository->count(['trick' => $image->getTrick()]) > 1) {
+                if ($image->getBool()) {
+                    /* @var Image $t */
+                    $t = $imageRepository->findOneBy(['trick' => $image->getTrick()], ['id' => 'ASC']);
+                    $t->setBool(TRUE);
+                }
+                $this->entityManager->remove($image);
+                $this->entityManager->flush();
+                $this->addFlash('success', 'L\'image a bien été supprimée');
+            } else {
+                $this->addFlash('error', 'Impossible de supprimer toutes les images d\'une figure, ajoutez en d\'abord une');
+            }
+        } else {
+            $this->addFlash('error', 'L\'image n\'a pas pu etre supprimée');
+        }
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('flash.html.twig');
+        }
+        return $this->redirectToRoute('trick_show', [
+            'slug' => $image->getTrick()->getSlug(),
+        ]);
     }
 }
