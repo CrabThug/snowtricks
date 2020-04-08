@@ -1,12 +1,85 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Snowtricks
+        {% block title %}{% endblock %}
+    </title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{{ asset('assets/css/w3.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    {% endblock %}
+</head>
+<body class="w3-light-gray" style="padding-bottom: 15px;">
+<!-- Navbar -->
+<div class="w3-top w3-hide-small z-index-5">
+    <div class="w3-bar w3-black w3-card">
+        <div class="w3-container" style="max-width: 1200px;margin:auto;">
+            <a href="/" class="w3-bar-item w3-button" style="width:100%;max-width:82px">
+                <img class="w3-image" src="{{ asset('images/logo.png') }}" alt="Logo">
+            </a>
+            <div class="w3-right">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <a href="{{ path('trick_new') }}"
+                       class="w3-bar-item w3-padding-large">{% trans %}Add trick{% endtrans %}</a>
+                    <a href="{{ path('app_logout') }}"
+                       class="w3-bar-item w3-padding-large">{% trans %}Logout{% endtrans %}</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}"
+                       class="w3-bar-item w3-padding-large">{% trans %}Sign in{% endtrans %}</a>
+                    <a href="{{ path('app_register') }}"
+                       class="w3-bar-item w3-padding-large">{% trans %}Sign up{% endtrans %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="w3-hide-medium w3-hide-large">
+    <div class="w3-bar w3-bottom w3-black w3-center" id="menuSmall">
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a href="{{ path('home') }}" class="w3-bar-item w3-padding-large w3-col s4">
+                <i class="fa fa-home" aria-hidden="true"></i>
+            </a>
+            <a href="{{ path('trick_new') }}" class="w3-bar-item w3-padding-large w3-col s4">
+                <i class="fa fa-plus-square" aria-hidden="true"></i>
+            </a>
+            <a href="{{ path('app_logout') }}" class="w3-bar-item w3-padding-large w3-col s4">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+            </a>
+        {% else %}
+            <a href="{{ path('home') }}" class="w3-bar-item w3-padding-large w3-col s4">
+                <i class="fa fa-home" aria-hidden="true"></i>
+            </a>
+            <a href="{{ path('app_login') }}" class="w3-bar-item w3-padding-large w3-col s4"><i class="fa fa-sign-in"
+                                                                                                aria-hidden="true"></i></a>
+            <a href="{{ path('app_register') }}" class="w3-bar-item w3-padding-large w3-col s4"><i
+                        class="fa fa-user-plus" aria-hidden="true"></i></a>
+        {% endif %}
+    </div>
+</div>
+<div>
+    <div class="w3-round w3-white" style="margin: auto;max-width: 1170px">
+        <div class="padding-nav">
+            <div id="flash-container">{{ include('flash.html.twig') }}</div>
+            {% block body %}{% endblock %}
+        </div>
+        {% block footer %}
+            <footer class="w3-center">
+                <p>Copyright &copy; 2019</p>
+            </footer>
+        {% endblock footer %}
+    </div>
+</div>
+{% block javascripts %}
+    <script src="{{ asset('assets/js/jquery.js') }}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
+    <script src="{{ asset('assets/js/collection.js') }}"></script>
+    <script src="{{ asset('assets/js/functions.js') }}"></script>
+    <script src="{{ asset('assets/js/onClick.js') }}"></script>
+{% endblock %}
+</body>
 </html>

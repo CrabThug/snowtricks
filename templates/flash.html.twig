@@ -1,0 +1,21 @@
+{% for messages in app.flashes(['warning', 'error']) %}
+    {% for message in messages %}
+        <div class="w3-panel w3-pale-red flash">
+            {{ message }}
+            <span onclick="this.parentElement.style.display='none'"
+                  class="w3-right pointer w3-margin-left"><i class="fa fa-times" aria-hidden="true"></i>
+        </span>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+{% for messages in app.flashes %}
+    {% for message in messages %}
+        <div class="w3-panel w3-pale-green flash">
+            {{ message }}
+            <span onclick="this.parentElement.style.display='none'"
+                  class="w3-right pointer w3-margin-left"><i class="fa fa-times" aria-hidden="true"></i>
+        </span>
+        </div>
+    {% endfor %}
+{% endfor %}

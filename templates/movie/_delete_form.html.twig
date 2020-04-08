@@ -1,0 +1,37 @@
+{% if type == 'ajax' %}
+    <div class="w3-modal-content w3-card" id="tokenDel{{ movie.id }}" value="{{ csrf_token('delete' ~ movie.id) }}">
+        <header class="w3-container w3-blue w3-center">
+            <h2>Confirmation</h2>
+        </header>
+        <div class="w3-container w3-center w3-margin w3-padding-32">
+            <p class="w3-margin">Voulez vous supprimer la video ?</p>
+        </div>
+        <footer class="w3-container w3-center w3-margin w3-padding-32">
+            {% if main is defined and true %}
+                <a class="w3-button w3-red" id="{{ movie.id }}" link="{{ path("movie_delete",{id:movie.id}) }}"
+                   onclick="deleteMedia(this);$('#modalDeleteMovie{{ movie.id }}').hide()">Supprimer</a>
+            {% else %}
+                <a class="w3-button w3-red" id="{{ movie.id }}" media="{{ media }}"
+                   link="{{ path("movie_delete",{id:movie.id}) }}"
+                   onclick="deleteMedia(this);$('#modalDeleteMovie{{ movie.id }}').hide()">Supprimer
+                </a>
+            {% endif %}
+            <a class="w3-button" onclick="$('#modalDeleteMovie{{ movie.id }}').hide()">Annuler</a>
+        </footer>
+    </div>
+{% elseif type == 'form' %}
+    <form class="w3-modal-content w3-card-4" action="{{ path('movie_delete', {'id': movie.id}) }}">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ movie.id) }}">
+        <header class="w3-container w3-blue w3-center">
+            <h2>Confirmation</h2>
+        </header>
+        <div class="w3-container w3-center w3-margin w3-padding-32">
+            <p class="w3-margin">Voulez vous supprimer la video ?</p>
+        </div>
+        <footer class="w3-container w3-center w3-margin w3-padding-32">
+            <button class="w3-button w3-red">Confirmer</button>
+            <a class="w3-button" onclick="$('#modalDeleteMovie{{ movie.id }}').hide()">Annuler</a>
+        </footer>
+    </form>
+{% endif %}

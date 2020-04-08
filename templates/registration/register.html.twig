@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="w3-light-gray w3-padding-64">
+        <div class="w3-white w3-padding-64 w3-round" style="max-width: 600px; margin: auto">
+            <h1 class="w3-center">{% trans %}Register{% endtrans %}</h1>
+            {{ form_start(registrationForm) }}
+            <div class="w3-margin">
+                {{ form_row(registrationForm.name) }}
+            </div>
+            <div class="w3-margin">
+                {{ form_row(registrationForm.email) }}
+            </div>
+            <div class="w3-margin">
+                {{ form_row(registrationForm.plainPassword) }}
+            </div>
+            <div class="w3-margin">
+                {{ form_row(registrationForm.file) }}
+            </div>
+            <div class="w3-margin">
+                {{ form_row(registrationForm.agreeTerms) }}
+            </div>
+            <div class="w3-margin">
+                <button class="w3-btn w3-blue">{% trans %}Register{% endtrans %}</button>
+            </div>
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock footer %}

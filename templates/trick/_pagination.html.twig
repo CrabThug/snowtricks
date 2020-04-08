@@ -1,0 +1,8 @@
+{% for c in comment %}
+    <div class="w3-margin">
+        <div class="w3-row-padding" style="max-width: 500px;margin: auto">
+            <div class="w3-col s2 w3-padding">{{ c.user }}</div>
+            <div class="w3-col s10 w3-light-gray w3-padding break-word">{{ c.content }}</div>
+        </div>
+    </div>
+{% endfor %}

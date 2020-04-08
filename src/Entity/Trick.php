@@ -5,9 +5,13 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
+ * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity("title")
  */
 class Trick
 {
@@ -19,7 +23,11 @@ class Trick
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     *@Assert\Length(
+     *      max = 18,
+     *      maxMessage = "Le titre ne doit pas depasser {{ limit }} characteres"
+     * )
+     * @ORM\Column(type="string", length=18, unique=true)
      */
     private $title;
 
@@ -34,19 +42,34 @@ class Trick
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Image",cascade={"persist","remove"}, mappedBy="trick")
      */
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Movie", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Movie",cascade={"persist","remove"}, mappedBy="trick")
      */
     private $movies;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick", orphanRemoval=true)
      */
     private $comments;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $created;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
 
     public function __construct()
     {
@@ -185,6 +208,48 @@ class Trick
                 $comment->setTrick(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreated(): ?\DateTimeInterface
+    {
+        return $this->created;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreated(): self
+    {
+        $this->created = new \DateTime();
+
+        return $this;
+    }
+
+    public function getUpdated(): ?\DateTimeInterface
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setUpdated(): self
+    {
+        $this->updated = new \DateTime();
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
@@ -22,14 +23,40 @@ class Image
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $path;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="images")
      */
     private $trick;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $alt;
+
+    /**
+     * @var UploadedFile
+     */
+    private $file;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $bool;
+
+    /**
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param mixed $file
+     */
+    public function setFile($file) : void
+    {
+        $this->file = $file;
+    }
 
     public function getId(): ?int
     {
@@ -47,19 +74,7 @@ class Image
 
         return $this;
     }
-
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): self
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
+    
     public function getTrick(): ?Trick
     {
         return $this->trick;
@@ -71,4 +86,30 @@ class Image
 
         return $this;
     }
+
+    public function getAlt(): ?string
+    {
+        return $this->alt;
+    }
+
+    public function setAlt(string $alt): self
+    {
+        $this->alt = $alt;
+
+        return $this;
+    }
+
+    public function getBool(): ?bool
+    {
+        return $this->bool;
+    }
+
+    public function setBool(bool $bool): self
+    {
+        $this->bool = $bool;
+
+        return $this;
+    }
+
+
 }

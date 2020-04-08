@@ -1,0 +1,31 @@
+<div class="w3-display-container w3-gray div-image">
+    {% if trick is defined %}
+        {% for image in trick.images %}
+            {% if image.bool == 1 %}
+                <img id="{% if show is defined %}{{ image.id }}{% elseif edit is defined %}cover{% endif %}"
+                     class="w3-image"
+                     src="{{ asset(image_directory ~ image.name) }}"
+                     alt="{{ image.alt }}">
+            {% endif %}
+        {% endfor %}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') and show is defined %}
+            <div class="w3-display-topright w3-blue">
+                <a class="w3-button" href="{{ path('trick_edit', {'slug' : trick.slug }) }}">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                <a class="w3-button" onclick="$('#modalDelete{{ trick.id }}').show()">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div id="modalDelete{{ trick.id }}" class="w3-modal w3-animate-opacity">
+                {{ include('trick/_delete_form.html.twig', {type:'form'}) }}
+            </div>
+            <div id="modalDelete{{ trick.id }}" class="w3-modal w3-animate-opacity">
+                {{ include('trick/_delete_form.html.twig', {type:'form'}) }}
+            </div>
+        {% endif %}
+        <tag class="w3-display-middle w3-black w3-tag w3-round padding-lr w3-xxlarge">
+            {{ trick.title|capitalize }}
+        </tag>
+    {% endif %}
+</div>

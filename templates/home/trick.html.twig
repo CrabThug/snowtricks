@@ -1,0 +1,34 @@
+{% for trick in tricks %}
+    <div class="w3-col s12 m4 l3 w3-margin-bottom trick ntrick" id="trick{{ trick.id }}">
+        <div class="gainsboro">
+            {% for image in trick.images %}
+                {% if image.bool == 1 %}
+                    <a href="{{ path('trick_show', {slug:trick.slug}) }}"><img class="w3-image" src="{{ asset(image_directory ~ image.name) }}" alt="image"></a>
+                {% endif %}
+            {% else %}
+                <a href="{{ path('trick_show', {slug:trick.slug}) }}"><img class="w3-image" src="{{ asset('images/wallp.jpg') }}" alt="demo"></a>
+            {% endfor %}
+            <div class="w3-container w3-padding">
+                <a class="overflow-none break-word" style="max-width: 1px"
+                   href="{{ path('trick_show', { slug:trick.slug }) }}">{{ trick.title }}</a>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <div class="w3-right">
+                        <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
+                            <i class="fa fa-pencil w3-margin-right" aria-hidden="true"></i>
+                        </a>
+                        <a class="pointer" onclick="$('{{ '#modalDelete' ~ trick.id }}').show()">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div id="{{ 'modalDelete' ~ trick.id }}" class="w3-modal w3-animate-opacity">
+        {{ include('trick/_delete_form.html.twig', {type:'ajax'}) }}
+    </div>
+{% else %}
+    <div class="w3-padding w3-margin">
+        <p class="w3-padding w3-border w3-round w3-light-grey w3-center">aucun trick pour le moment</p>
+    </div>
+{% endfor %}

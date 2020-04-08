@@ -1,0 +1,76 @@
+<div id="page">
+    {% include 'trick/__header.html.twig' with {'edit': true} %}
+
+    {% include 'trick/__carousel.html.twig' with {'edit': true} %}
+
+    {{ form_start(form) }}
+
+
+    {% if form_errors(form) %}
+        <div class="w3-panel w3-pale-red w3-col s12 m4 w3-margin">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+
+    <div class="w3-row">
+        <a class="w3-button w3-blue w3-round w3-margin add_image_link"
+           onclick="">{% trans %}Add a picture{% endtrans %}</a>
+        <a class="w3-button w3-blue w3-round w3-margin add_movie_link"
+           onclick="">{% trans %}Add a movie{% endtrans %}</a>
+    </div>
+
+    <div class="w3-row-padding">
+        <div class="images"
+             data-index="{{ form.images.children|length }}"
+             data-value="{% if trick is defined %}{{ trick.images|length }}{% endif %}"
+             data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"
+             id="trick_images">
+        </div>
+        <div class="movies"
+             data-index="{{ form.movies.children|length }}"
+             data-value="{% if trick is defined %}{{ trick.movies|length }}{% endif %}"
+             data-prototype="{{ form_widget(form.movies.vars.prototype)|e('html_attr') }}"
+             id="trick_movies">
+        </div>
+    </div>
+    <div style="overflow: hidden">
+        <div class="w3-margin">
+            {% if form_errors(form.title) %}
+                <div class="w3-panel w3-pale-red">
+                    {{ form_errors(form.title) }}
+                </div>
+            {% endif %}
+            {{ form_widget(form.title) }}
+        </div>
+        <div class="w3-margin">
+            {% if form_errors(form.description) %}
+                <div class="w3-panel w3-pale-red">
+                    {{ form_errors(form.description) }}
+                </div>
+            {% endif %}
+            {{ form_widget(form.description) }}
+        </div>
+        <div class="w3-margin">
+            {% if form_errors(form.description) %}
+                <div class="w3-panel w3-pale-red">
+                    {{ form_errors(form.category) }}
+                </div>
+            {% endif %}
+            {{ form_widget(form.category) }}
+        </div>
+        <div class="w3-margin w3-right">
+            {{ form_widget(form.submit) }}
+            {% if trick is defined %}
+                <a class="w3-button w3-red w3-round"
+                   onclick="$('#modalDelete{{ trick.id }}').show()">{% trans %}Delete{% endtrans %}</a>
+            {% endif %}
+        </div>
+    </div>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest' : false}) }}
+    {% if trick is defined %}
+        <div id="modalDelete{{ trick.id }}" class="w3-modal w3-animate-opacity">
+            {{ include('trick/_delete_form.html.twig', {type:'form'}) }}
+        </div>
+    {% endif %}
+</div>
