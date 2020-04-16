@@ -70,7 +70,7 @@ class Mail
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            return $this->flashBag->add('error', 'le mail n\'pas pu vous etre envoyé');
+            return $this->flashBag->add('error', 'le mail n\'a pas pu vous etre envoyé');
         }
         return $this->flashBag->add('success', 'un email vous a ete envoyé');
     }
