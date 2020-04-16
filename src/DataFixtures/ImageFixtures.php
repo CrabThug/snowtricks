@@ -15,7 +15,7 @@ class ImageFixtures extends Fixture implements DependentFixtureInterface
     /**
      * @var TrickRepository
      */
-    private TrickRepository $trickRepository;
+    private $trickRepository;
 
     /**
      * /**

@@ -14,11 +14,11 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
     /**
      * @var SluggerInterface
      */
-    private SluggerInterface $slugger;
+    private $slugger;
     /**
      * @var CategoryRepository
      */
-    private CategoryRepository $categoryRepository;
+    private $categoryRepository;
 
     public function __construct(SluggerInterface $slugger, CategoryRepository $categoryRepository)
     {

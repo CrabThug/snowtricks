@@ -15,7 +15,7 @@ class MovieFixtures extends Fixture implements DependentFixtureInterface
     /**
      * @var TrickRepository
      */
-    private TrickRepository $trickRepository;
+    private $trickRepository;
 
     public function __construct(TrickRepository $trickRepository)
     {

@@ -17,11 +17,11 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
     /**
      * @var UserRepository
      */
-    private UserRepository $users;
+    private $users;
     /**
      * @var TrickRepository
      */
-    private TrickRepository $trickRepository;
+    private $trickRepository;
 
     public function __construct(UserRepository $users, TrickRepository $trickRepository)
     {
