@@ -9,6 +9,7 @@ clone the repository
 
 ```
 composer install
+bin/console d:d:c
 bin/console make:migration
 bin/console d:m:m
 bin/console d:f:l
