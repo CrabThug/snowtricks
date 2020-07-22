@@ -12,7 +12,8 @@ composer install
 bin/console d:d:c
 bin/console make:migration
 bin/console d:m:m -n
-bin/console d:f:l
+(if u want fixtures)
+bin/console d:f:l -n
 ```
 
 modifier le fichier env en prod
