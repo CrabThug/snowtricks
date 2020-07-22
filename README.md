@@ -8,7 +8,7 @@ requirement globaly : composer, yarn, symfony
 clone the repository
 
 ```
-composer install
+composer install && composer update
 bin/console make:migration
 bin/console d:m:m
 bin/console d:f:l
